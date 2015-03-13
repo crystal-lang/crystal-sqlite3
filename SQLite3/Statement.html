@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <link href="../css/style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+
+  <h1>class SQLite3::Statement</h1>
+
+
+
+  <h2>Overview</h2>
+
+  <p>A statement represents a prepared-but-unexecuted SQL query.</p>
+
+
+
+
+
+  <h2>Superclass hierarchy</h2>
+  <div style="padding-left: 0px">Object</div><div style="padding-left: 20px">Reference</div><div style="padding-left: 40px"><a href="../SQLite3/Statement.html">SQLite3::Statement</a></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2>Instance Method Summary</h2>
+  <ul>
+    
+      <li class="entry-summary">
+        <a href="#%5B%5D%28index%20%3A%20Int%29-instance-method" class="signature"><strong>#[]</strong>(index : Int)</a>
+        
+          <div class="summary"><p>Returns the value of the given column by index (1-based).</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#%5B%5D%28name%20%3A%20String%29-instance-method" class="signature"><strong>#[]</strong>(name : String)</a>
+        
+          <div class="summary"><p>Returns the value of the given column by name.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#%5B%5D%3D%28index%20%3A%20Int%2C%20value%20%3A%20Int64%29-instance-method" class="signature"><strong>#[]=</strong>(index : Int, value : Int64)</a>
+        
+          <div class="summary"><p>Binds the parameter at the given index to an Int64.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#%5B%5D%3D%28index%20%3A%20Int%2C%20value%20%3A%20Int32%29-instance-method" class="signature"><strong>#[]=</strong>(index : Int, value : Int32)</a>
+        
+          <div class="summary"><p>Binds the parameter at the given index to an Int32.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#%5B%5D%3D%28index%20%3A%20Int%2C%20value%20%3A%20Nil%29-instance-method" class="signature"><strong>#[]=</strong>(index : Int, value : Nil)</a>
+        
+          <div class="summary"><p>Binds the parameter at the given index to an Int.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#%5B%5D%3D%28name%20%3A%20String%20%7C%20Symbol%2C%20value%29-instance-method" class="signature"><strong>#[]=</strong>(name : String | Symbol, value)</a>
+        
+          <div class="summary"><p>Binds a named parameter, using the <code>:AAAA</code> naming scheme for parameters.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#%5B%5D%3D%28index%20%3A%20Int%2C%20hash%20%3A%20Hash%29-instance-method" class="signature"><strong>#[]=</strong>(index : Int, hash : Hash)</a>
+        
+          <div class="summary"><p>Binds a hash to this statement (the <code>index</code> is ignored).</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#%5B%5D%3D%28index%20%3A%20Int%2C%20value%20%3A%20Slice%28UInt8%29%29-instance-method" class="signature"><strong>#[]=</strong>(index : Int, value : Slice(UInt8))</a>
+        
+          <div class="summary"><p>Binds the parameter at the given index to a BLOB.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#%5B%5D%3D%28index%20%3A%20Int%2C%20value%20%3A%20Float%29-instance-method" class="signature"><strong>#[]=</strong>(index : Int, value : Float)</a>
+        
+          <div class="summary"><p>Binds the parameter at the given index to a Float.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#%5B%5D%3D%28index%20%3A%20Int%2C%20value%20%3A%20String%29-instance-method" class="signature"><strong>#[]=</strong>(index : Int, value : String)</a>
+        
+          <div class="summary"><p>Binds the parameter at the given index to a String.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#close-instance-method" class="signature"><strong>#close</strong></a>
+        
+          <div class="summary"><p>Closes this statement.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#closed%3F-instance-method" class="signature"><strong>#closed?</strong></a>
+        
+          <div class="summary"><p>Returns <code>true</code> if this statement is closed.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#column_count-instance-method" class="signature"><strong>#column_count</strong></a>
+        
+          <div class="summary"><p>Returns the number of columns in this statement.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#column_name%28index%29-instance-method" class="signature"><strong>#column_name</strong>(index)</a>
+        
+          <div class="summary"><p>Returns the name of the column at the given index.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#column_type%28index%20%3A%20Int%29-instance-method" class="signature"><strong>#column_type</strong>(index : Int)</a>
+        
+          <div class="summary"><p>Returns the <code><a href="../SQLite3/Type.html">Type</a></code> of the column at the given index.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#columns-instance-method" class="signature"><strong>#columns</strong></a>
+        
+          <div class="summary"><p>Returns the column names of this statement.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#execute%28%2Abinds%2C%20%26block%29-instance-method" class="signature"><strong>#execute</strong>(*binds, &block)</a>
+        
+          <div class="summary"><p>Executes this statement with the given binds and yields a <code><a href="../SQLite3/ResultSet.html">ResultSet</a></code> that will be closed at the end of the block.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#execute%28binds%20%3A%20Enumerable%20%7C%20Slice%28UInt8%29%2C%20%26block%29-instance-method" class="signature"><strong>#execute</strong>(binds : Enumerable | Slice(UInt8), &block)</a>
+        
+          <div class="summary"><p>Executes this statement with the given binds and yields a <code><a href="../SQLite3/ResultSet.html">ResultSet</a></code> that will be closed at the end of the block.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#execute%28binds%20%3A%20Slice%28UInt8%29%29-instance-method" class="signature"><strong>#execute</strong>(binds : Slice(UInt8))</a>
+        
+          <div class="summary"><p>Executes this statement with a single BLOB bind and returns a <code><a href="../SQLite3/ResultSet.html">ResultSet</a></code>.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#execute%28binds%20%3A%20Enumerable%29-instance-method" class="signature"><strong>#execute</strong>(binds : Enumerable)</a>
+        
+          <div class="summary"><p>Executes this statement with the given binds and returns a <code><a href="../SQLite3/ResultSet.html">ResultSet</a></code>.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#execute%28%2Abinds%29-instance-method" class="signature"><strong>#execute</strong>(*binds)</a>
+        
+          <div class="summary"><p>Executes this statement with the given binds and returns a <code><a href="../SQLite3/ResultSet.html">ResultSet</a></code>.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#reset-instance-method" class="signature"><strong>#reset</strong></a>
+        
+          <div class="summary"><p>Reset this statment, allowing to re-execute it with new binds.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#types-instance-method" class="signature"><strong>#types</strong></a>
+        
+          <div class="summary"><p>Returns an <code>Array(<a href="../SQLite3/Type.html">Type</a>)</code> of this statement's columns.</p></div>
+        
+      </li>
+    
+  </ul>
+
+
+
+
+
+
+
+
+  <h2>Instance Method Detail</h2>
+  
+    <div class="entry-detail">
+      <div class="signature" id="%5B%5D%28index%20%3A%20Int%29-instance-method">
+        
+        def <strong>[]</strong>(index : Int)
+      </div>
+      
+        <div class="doc"><p>Returns the value of the given column by index (1-based).</p></div>
+      
+      
+        <br/>
+        <div>[<a href="https://github.com/manastech/crystal-sqlite3/blob/d62185867bf35fa946436da24de5e8aa6f1a6227/src/sqlite3/statement.cr#L78" target="_blank">View source</a>]</div>
+      
+    </div>
+    <hr/>
+  
+    <div class="entry-detail">
+      <div class="signature" id="%5B%5D%28name%20%3A%20String%29-instance-method">
+        
+        def <strong>[]</strong>(name : String)
+      </div>
+      
+        <div class="doc"><p>Returns the value of the given column by name.</p></div>
+      
+      
+        <br/>
+        <div>[<a href="https://github.com/manastech/crystal-sqlite3/blob/d62185867bf35fa946436da24de5e8aa6f1a6227/src/sqlite3/statement.cr#L100" target="_blank">View source</a>]</div>
+      
+    </div>
+    <hr/>
+  
+    <div class="entry-detail">
+      <div class="signature" id="%5B%5D%3D%28index%20%3A%20Int%2C%20value%20%3A%20Int64%29-instance-method">
+        
+        def <strong>[]=</strong>(index : Int, value : Int64)
+      </div>
+      
+        <div class="doc"><p>Binds the parameter at the given index to an Int64.</p></div>
+      
+      
+        <br/>
+        <div>[<a href="https://github.com/manastech/crystal-sqlite3/blob/d62185867bf35fa946436da24de5e8aa6f1a6227/src/sqlite3/statement.cr#L120" target="_blank">View source</a>]</div>
+      
+    </div>
+    <hr/>
+  
+    <div class="entry-detail">
+      <div class="signature" id="%5B%5D%3D%28index%20%3A%20Int%2C%20value%20%3A%20Int32%29-instance-method">
+        
+        def <strong>[]=</strong>(index : Int, value : Int32)
+      </div>
+      
+        <div class="doc"><p>Binds the parameter at the given index to an Int32.</p></div>
+      
+      
+        <br/>
+        <div>[<a href="https://github.com/manastech/crystal-sqlite3/blob/d62185867bf35fa946436da24de5e8aa6f1a6227/src/sqlite3/statement.cr#L115" target="_blank">View source</a>]</div>
+      
+    </div>
+    <hr/>
+  
+    <div class="entry-detail">
+      <div class="signature" id="%5B%5D%3D%28index%20%3A%20Int%2C%20value%20%3A%20Nil%29-instance-method">
+        
+        def <strong>[]=</strong>(index : Int, value : Nil)
+      </div>
+      
+        <div class="doc"><p>Binds the parameter at the given index to an Int.</p></div>
+      
+      
+        <br/>
+        <div>[<a href="https://github.com/manastech/crystal-sqlite3/blob/d62185867bf35fa946436da24de5e8aa6f1a6227/src/sqlite3/statement.cr#L110" target="_blank">View source</a>]</div>
+      
+    </div>
+    <hr/>
+  
+    <div class="entry-detail">
+      <div class="signature" id="%5B%5D%3D%28name%20%3A%20String%20%7C%20Symbol%2C%20value%29-instance-method">
+        
+        def <strong>[]=</strong>(name : String | Symbol, value)
+      </div>
+      
+        <div class="doc"><p>Binds a named parameter, using the <code>:AAAA</code> naming scheme for parameters.</p></div>
+      
+      
+        <br/>
+        <div>[<a href="https://github.com/manastech/crystal-sqlite3/blob/d62185867bf35fa946436da24de5e8aa6f1a6227/src/sqlite3/statement.cr#L140" target="_blank">View source</a>]</div>
+      
+    </div>
+    <hr/>
+  
+    <div class="entry-detail">
+      <div class="signature" id="%5B%5D%3D%28index%20%3A%20Int%2C%20hash%20%3A%20Hash%29-instance-method">
+        
+        def <strong>[]=</strong>(index : Int, hash : Hash)
+      </div>
+      
+        <div class="doc"><p>Binds a hash to this statement (the <code>index</code> is ignored).</p></div>
+      
+      
+        <br/>
+        <div>[<a href="https://github.com/manastech/crystal-sqlite3/blob/d62185867bf35fa946436da24de5e8aa6f1a6227/src/sqlite3/statement.cr#L150" target="_blank">View source</a>]</div>
+      
+    </div>
+    <hr/>
+  
+    <div class="entry-detail">
+      <div class="signature" id="%5B%5D%3D%28index%20%3A%20Int%2C%20value%20%3A%20Slice%28UInt8%29%29-instance-method">
+        
+        def <strong>[]=</strong>(index : Int, value : Slice(UInt8))
+      </div>
+      
+        <div class="doc"><p>Binds the parameter at the given index to a BLOB.</p></div>
+      
+      
+        <br/>
+        <div>[<a href="https://github.com/manastech/crystal-sqlite3/blob/d62185867bf35fa946436da24de5e8aa6f1a6227/src/sqlite3/statement.cr#L135" target="_blank">View source</a>]</div>
+      
+    </div>
+    <hr/>
+  
+    <div class="entry-detail">
+      <div class="signature" id="%5B%5D%3D%28index%20%3A%20Int%2C%20value%20%3A%20Float%29-instance-method">
+        
+        def <strong>[]=</strong>(index : Int, value : Float)
+      </div>
+      
+        <div class="doc"><p>Binds the parameter at the given index to a Float.</p></div>
+      
+      
+        <br/>
+        <div>[<a href="https://github.com/manastech/crystal-sqlite3/blob/d62185867bf35fa946436da24de5e8aa6f1a6227/src/sqlite3/statement.cr#L125" target="_blank">View source</a>]</div>
+      
+    </div>
+    <hr/>
+  
+    <div class="entry-detail">
+      <div class="signature" id="%5B%5D%3D%28index%20%3A%20Int%2C%20value%20%3A%20String%29-instance-method">
+        
+        def <strong>[]=</strong>(index : Int, value : String)
+      </div>
+      
+        <div class="doc"><p>Binds the parameter at the given index to a String.</p></div>
+      
+      
+        <br/>
+        <div>[<a href="https://github.com/manastech/crystal-sqlite3/blob/d62185867bf35fa946436da24de5e8aa6f1a6227/src/sqlite3/statement.cr#L130" target="_blank">View source</a>]</div>
+      
+    </div>
+    <hr/>
+  
+    <div class="entry-detail">
+      <div class="signature" id="close-instance-method">
+        
+        def <strong>close</strong>
+      </div>
+      
+        <div class="doc"><p>Closes this statement.</p></div>
+      
+      
+        <br/>
+        <div>[<a href="https://github.com/manastech/crystal-sqlite3/blob/d62185867bf35fa946436da24de5e8aa6f1a6227/src/sqlite3/statement.cr#L174" target="_blank">View source</a>]</div>
+      
+    </div>
+    <hr/>
+  
+    <div class="entry-detail">
+      <div class="signature" id="closed%3F-instance-method">
+        
+        def <strong>closed?</strong>
+      </div>
+      
+        <div class="doc"><p>Returns <code>true</code> if this statement is closed. See <code><a href="../SQLite3/Statement.html#close-instance-method">#close</a></code>.</p></div>
+      
+      
+        <br/>
+        <div>[<a href="https://github.com/manastech/crystal-sqlite3/blob/d62185867bf35fa946436da24de5e8aa6f1a6227/src/sqlite3/statement.cr#L182" target="_blank">View source</a>]</div>
+      
+    </div>
+    <hr/>
+  
+    <div class="entry-detail">
+      <div class="signature" id="column_count-instance-method">
+        
+        def <strong>column_count</strong>
+      </div>
+      
+        <div class="doc"><p>Returns the number of columns in this statement.</p></div>
+      
+      
+        <br/>
+        <div>[<a href="https://github.com/manastech/crystal-sqlite3/blob/d62185867bf35fa946436da24de5e8aa6f1a6227/src/sqlite3/statement.cr#L25" target="_blank">View source</a>]</div>
+      
+    </div>
+    <hr/>
+  
+    <div class="entry-detail">
+      <div class="signature" id="column_name%28index%29-instance-method">
+        
+        def <strong>column_name</strong>(index)
+      </div>
+      
+        <div class="doc"><p>Returns the name of the column at the given index.</p></div>
+      
+      
+        <br/>
+        <div>[<a href="https://github.com/manastech/crystal-sqlite3/blob/d62185867bf35fa946436da24de5e8aa6f1a6227/src/sqlite3/statement.cr#L35" target="_blank">View source</a>]</div>
+      
+    </div>
+    <hr/>
+  
+    <div class="entry-detail">
+      <div class="signature" id="column_type%28index%20%3A%20Int%29-instance-method">
+        
+        def <strong>column_type</strong>(index : Int)
+      </div>
+      
+        <div class="doc"><p>Returns the <code><a href="../SQLite3/Type.html">Type</a></code> of the column at the given index.</p></div>
+      
+      
+        <br/>
+        <div>[<a href="https://github.com/manastech/crystal-sqlite3/blob/d62185867bf35fa946436da24de5e8aa6f1a6227/src/sqlite3/statement.cr#L30" target="_blank">View source</a>]</div>
+      
+    </div>
+    <hr/>
+  
+    <div class="entry-detail">
+      <div class="signature" id="columns-instance-method">
+        
+        def <strong>columns</strong>
+      </div>
+      
+        <div class="doc"><p>Returns the column names of this statement.</p></div>
+      
+      
+        <br/>
+        <div>[<a href="https://github.com/manastech/crystal-sqlite3/blob/d62185867bf35fa946436da24de5e8aa6f1a6227/src/sqlite3/statement.cr#L157" target="_blank">View source</a>]</div>
+      
+    </div>
+    <hr/>
+  
+    <div class="entry-detail">
+      <div class="signature" id="execute%28%2Abinds%2C%20%26block%29-instance-method">
+        
+        def <strong>execute</strong>(*binds, &block)
+      </div>
+      
+        <div class="doc"><p>Executes this statement with the given binds and yields a <code><a href="../SQLite3/ResultSet.html">ResultSet</a></code> that
+will be closed at the end of the block.</p></div>
+      
+      
+        <br/>
+        <div>[<a href="https://github.com/manastech/crystal-sqlite3/blob/d62185867bf35fa946436da24de5e8aa6f1a6227/src/sqlite3/statement.cr#L46" target="_blank">View source</a>]</div>
+      
+    </div>
+    <hr/>
+  
+    <div class="entry-detail">
+      <div class="signature" id="execute%28binds%20%3A%20Enumerable%20%7C%20Slice%28UInt8%29%2C%20%26block%29-instance-method">
+        
+        def <strong>execute</strong>(binds : Enumerable | Slice(UInt8), &block)
+      </div>
+      
+        <div class="doc"><p>Executes this statement with the given binds and yields a <code><a href="../SQLite3/ResultSet.html">ResultSet</a></code> that
+will be closed at the end of the block.</p></div>
+      
+      
+        <br/>
+        <div>[<a href="https://github.com/manastech/crystal-sqlite3/blob/d62185867bf35fa946436da24de5e8aa6f1a6227/src/sqlite3/statement.cr#L71" target="_blank">View source</a>]</div>
+      
+    </div>
+    <hr/>
+  
+    <div class="entry-detail">
+      <div class="signature" id="execute%28binds%20%3A%20Slice%28UInt8%29%29-instance-method">
+        
+        def <strong>execute</strong>(binds : Slice(UInt8))
+      </div>
+      
+        <div class="doc"><p>Executes this statement with a single BLOB bind and returns a <code><a href="../SQLite3/ResultSet.html">ResultSet</a></code>.</p></div>
+      
+      
+        <br/>
+        <div>[<a href="https://github.com/manastech/crystal-sqlite3/blob/d62185867bf35fa946436da24de5e8aa6f1a6227/src/sqlite3/statement.cr#L53" target="_blank">View source</a>]</div>
+      
+    </div>
+    <hr/>
+  
+    <div class="entry-detail">
+      <div class="signature" id="execute%28binds%20%3A%20Enumerable%29-instance-method">
+        
+        def <strong>execute</strong>(binds : Enumerable)
+      </div>
+      
+        <div class="doc"><p>Executes this statement with the given binds and returns a <code><a href="../SQLite3/ResultSet.html">ResultSet</a></code>.</p></div>
+      
+      
+        <br/>
+        <div>[<a href="https://github.com/manastech/crystal-sqlite3/blob/d62185867bf35fa946436da24de5e8aa6f1a6227/src/sqlite3/statement.cr#L60" target="_blank">View source</a>]</div>
+      
+    </div>
+    <hr/>
+  
+    <div class="entry-detail">
+      <div class="signature" id="execute%28%2Abinds%29-instance-method">
+        
+        def <strong>execute</strong>(*binds)
+      </div>
+      
+        <div class="doc"><p>Executes this statement with the given binds and returns a <code><a href="../SQLite3/ResultSet.html">ResultSet</a></code>.</p></div>
+      
+      
+        <br/>
+        <div>[<a href="https://github.com/manastech/crystal-sqlite3/blob/d62185867bf35fa946436da24de5e8aa6f1a6227/src/sqlite3/statement.cr#L40" target="_blank">View source</a>]</div>
+      
+    </div>
+    <hr/>
+  
+    <div class="entry-detail">
+      <div class="signature" id="reset-instance-method">
+        
+        def <strong>reset</strong>
+      </div>
+      
+        <div class="doc"><p>Reset this statment, allowing to re-execute it with new binds.</p></div>
+      
+      
+        <br/>
+        <div>[<a href="https://github.com/manastech/crystal-sqlite3/blob/d62185867bf35fa946436da24de5e8aa6f1a6227/src/sqlite3/statement.cr#L169" target="_blank">View source</a>]</div>
+      
+    </div>
+    <hr/>
+  
+    <div class="entry-detail">
+      <div class="signature" id="types-instance-method">
+        
+        def <strong>types</strong>
+      </div>
+      
+        <div class="doc"><p>Returns an <code>Array(<a href="../SQLite3/Type.html">Type</a>)</code> of this statement's columns. Note that the statement
+must be executed in order for this to return sensible values, otherwise all types
+will be NULL.</p></div>
+      
+      
+        <br/>
+        <div>[<a href="https://github.com/manastech/crystal-sqlite3/blob/d62185867bf35fa946436da24de5e8aa6f1a6227/src/sqlite3/statement.cr#L164" target="_blank">View source</a>]</div>
+      
+    </div>
+    <hr/>
+  
+
+
+
+
+
+</body>
+</html>

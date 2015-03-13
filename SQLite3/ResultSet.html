@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <link href="../css/style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+
+  <h1>class SQLite3::ResultSet</h1>
+
+
+
+  <h2>Overview</h2>
+
+  <p>The ResultSet object encapsulates the enumerability of a query’s output.
+It is a simple cursor over the data that the query returns.</p>
+
+<p>Typical usage is:</p>
+
+<pre><code><span class="k">require</span> <span class="s">"sqlite3"</span>
+
+db <span class="o">=</span> <span class="t">SQLite3</span><span class="t">::</span><span class="t">Database</span>.<span class="k">new</span>(<span class="s">"foo.db"</span>)
+stmt <span class="o">=</span> db.prepare(<span class="s">"select * from person"</span>)
+result_set <span class="o">=</span> stmt.execute
+<span class="k">while</span> result_set.<span class="k">next</span>
+  p result_set.to_a
+<span class="k">end</span>
+stmt.close
+db.close</code></pre>
+
+
+
+
+
+  <h2>Superclass hierarchy</h2>
+  <div style="padding-left: 0px">Object</div><div style="padding-left: 20px">Reference</div><div style="padding-left: 40px"><a href="../SQLite3/ResultSet.html">SQLite3::ResultSet</a></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2>Instance Method Summary</h2>
+  <ul>
+    
+      <li class="entry-summary">
+        <a href="#%5B%5D%28index_or_name%29-instance-method" class="signature"><strong>#[]</strong>(index_or_name)</a>
+        
+          <div class="summary"><p>Returns the value of a column by index or name.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#close-instance-method" class="signature"><strong>#close</strong></a>
+        
+          <div class="summary"><p>Closes this result set, closing the associated statement.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#closed%3F-instance-method" class="signature"><strong>#closed?</strong></a>
+        
+          <div class="summary"><p>Returns <code>true</code> if the associated statement is closed.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#column_count-instance-method" class="signature"><strong>#column_count</strong></a>
+        
+          <div class="summary"><p>Returns the number of columns.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#columns-instance-method" class="signature"><strong>#columns</strong></a>
+        
+          <div class="summary"><p>Returns the names of the columns, an <code>Array(String)</code>.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#next-instance-method" class="signature"><strong>#next</strong></a>
+        
+          <div class="summary"><p>Advances to the next row.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#to_a-instance-method" class="signature"><strong>#to_a</strong></a>
+        
+          <div class="summary"><p>Return the current row's value as an <code>Array(<a href="../SQLite3/Value.html">Value</a>)</code>.</p></div>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#types-instance-method" class="signature"><strong>#types</strong></a>
+        
+          <div class="summary"><p>Returns the types of the columns, an <code>Array(<a href="../SQLite3/Type.html">Type</a>)</code>.</p></div>
+        
+      </li>
+    
+  </ul>
+
+
+
+
+
+
+
+
+  <h2>Instance Method Detail</h2>
+  
+    <div class="entry-detail">
+      <div class="signature" id="%5B%5D%28index_or_name%29-instance-method">
+        
+        def <strong>[]</strong>(index_or_name)
+      </div>
+      
+        <div class="doc"><p>Returns the value of a column by index or name.</p></div>
+      
+      
+        <br/>
+        <div>[<a href="https://github.com/manastech/crystal-sqlite3/blob/d62185867bf35fa946436da24de5e8aa6f1a6227/src/sqlite3/result_set.cr#L29" target="_blank">View source</a>]</div>
+      
+    </div>
+    <hr/>
+  
+    <div class="entry-detail">
+      <div class="signature" id="close-instance-method">
+        
+        def <strong>close</strong>
+      </div>
+      
+        <div class="doc"><p>Closes this result set, closing the associated statement.</p></div>
+      
+      
+        <br/>
+        <div>[<a href="https://github.com/manastech/crystal-sqlite3/blob/d62185867bf35fa946436da24de5e8aa6f1a6227/src/sqlite3/result_set.cr#L58" target="_blank">View source</a>]</div>
+      
+    </div>
+    <hr/>
+  
+    <div class="entry-detail">
+      <div class="signature" id="closed%3F-instance-method">
+        
+        def <strong>closed?</strong>
+      </div>
+      
+        <div class="doc"><p>Returns <code>true</code> if the associated statement is closed.</p></div>
+      
+      
+        <br/>
+        <div>[<a href="https://github.com/manastech/crystal-sqlite3/blob/d62185867bf35fa946436da24de5e8aa6f1a6227/src/sqlite3/result_set.cr#L63" target="_blank">View source</a>]</div>
+      
+    </div>
+    <hr/>
+  
+    <div class="entry-detail">
+      <div class="signature" id="column_count-instance-method">
+        
+        def <strong>column_count</strong>
+      </div>
+      
+        <div class="doc"><p>Returns the number of columns.</p></div>
+      
+      
+        <br/>
+        <div>[<a href="https://github.com/manastech/crystal-sqlite3/blob/d62185867bf35fa946436da24de5e8aa6f1a6227/src/sqlite3/result_set.cr#L24" target="_blank">View source</a>]</div>
+      
+    </div>
+    <hr/>
+  
+    <div class="entry-detail">
+      <div class="signature" id="columns-instance-method">
+        
+        def <strong>columns</strong>
+      </div>
+      
+        <div class="doc"><p>Returns the names of the columns, an <code>Array(String)</code>.</p></div>
+      
+      
+        <br/>
+        <div>[<a href="https://github.com/manastech/crystal-sqlite3/blob/d62185867bf35fa946436da24de5e8aa6f1a6227/src/sqlite3/result_set.cr#L39" target="_blank">View source</a>]</div>
+      
+    </div>
+    <hr/>
+  
+    <div class="entry-detail">
+      <div class="signature" id="next-instance-method">
+        
+        def <strong>next</strong>
+      </div>
+      
+        <div class="doc"><p>Advances to the next row. Returns <code>true</code> if there's a next row,
+<code>false</code> otherwise. Must be called at least once to advance to the first
+row.</p></div>
+      
+      
+        <br/>
+        <div>[<a href="https://github.com/manastech/crystal-sqlite3/blob/d62185867bf35fa946436da24de5e8aa6f1a6227/src/sqlite3/result_set.cr#L46" target="_blank">View source</a>]</div>
+      
+    </div>
+    <hr/>
+  
+    <div class="entry-detail">
+      <div class="signature" id="to_a-instance-method">
+        
+        def <strong>to_a</strong>
+      </div>
+      
+        <div class="doc"><p>Return the current row's value as an <code>Array(<a href="../SQLite3/Value.html">Value</a>)</code>.</p></div>
+      
+      
+        <br/>
+        <div>[<a href="https://github.com/manastech/crystal-sqlite3/blob/d62185867bf35fa946436da24de5e8aa6f1a6227/src/sqlite3/result_set.cr#L68" target="_blank">View source</a>]</div>
+      
+    </div>
+    <hr/>
+  
+    <div class="entry-detail">
+      <div class="signature" id="types-instance-method">
+        
+        def <strong>types</strong>
+      </div>
+      
+        <div class="doc"><p>Returns the types of the columns, an <code>Array(<a href="../SQLite3/Type.html">Type</a>)</code>.</p></div>
+      
+      
+        <br/>
+        <div>[<a href="https://github.com/manastech/crystal-sqlite3/blob/d62185867bf35fa946436da24de5e8aa6f1a6227/src/sqlite3/result_set.cr#L34" target="_blank">View source</a>]</div>
+      
+    </div>
+    <hr/>
+  
+
+
+
+
+
+</body>
+</html>
