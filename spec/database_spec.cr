@@ -61,6 +61,18 @@ describe Database do
     end
   end
 
+  it "gets column types" do
+    Database.new(":memory:") do |db|
+      db.execute "create table person (name string, age integer)"
+      db.execute %(insert into person values ("foo", 10))
+      stmt = db.prepare("select * from person")
+      stmt.execute
+      stmt.step
+      stmt.types.should eq([Type::TEXT, Type::INTEGER])
+      stmt.close
+    end
+  end
+
   it "gets column by name" do
     Database.new(":memory:") do |db|
       db.execute "create table person (name string, age integer)"
