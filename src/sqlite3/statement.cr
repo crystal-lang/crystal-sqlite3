@@ -71,6 +71,7 @@ class SQLite3::Statement
   def execute(binds : Enumerable | Slice(UInt8), &block)
     result_set = execute(binds)
     yield result_set
+  ensure
     close
   end
 

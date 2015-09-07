@@ -109,4 +109,34 @@ describe Database do
   it "gets first value" do
     with_db(&.get_first_value(%(select 1))).should eq(1)
   end
+
+  it "ensures statements are closed" do
+    begin
+      Database.new(DB_FILENAME) do |db|
+        db.execute(%(create table if not exists a (i int not null, str text not null);))
+        db.execute(%(insert into a (i, str) values (23, "bai bai");))
+      end
+
+      2.times do |i|
+        Database.new(DB_FILENAME) do |db|
+          begin
+            db.query("SELECT i, str FROM a WHERE i = ?", 23) do |rs|
+              rs.next
+              break
+            end
+          rescue  e : SQLite3::Exception
+            fail("Expected no exception, but got \"#{e.message}\"")
+          end
+
+          begin
+            db.execute("UPDATE a SET i = ? WHERE i = ?", 23, 23)
+          rescue e : SQLite3::Exception
+            fail("Expected no exception, but got \"#{e.message}\"")
+          end
+        end
+      end
+    ensure
+      File.delete(DB_FILENAME)
+    end
+  end
 end
