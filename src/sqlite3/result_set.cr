@@ -37,7 +37,7 @@ class SQLite3::ResultSet
 
   # Returns the names of the columns, an `Array(String)`.
   def columns
-    @statement.types
+    @statement.columns
   end
 
   # Advances to the next row. Returns `true` if there's a next row,
