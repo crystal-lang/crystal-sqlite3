@@ -28,12 +28,12 @@ class SQLite3::Statement
 
   # Returns the `Type` of the column at the given index.
   def column_type(index : Int)
-    LibSQLite3.column_type(self, index.to_i32)
+    LibSQLite3.column_type(self, index)
   end
 
   # Returns the name of the column at the given index.
   def column_name(index)
-    String.new LibSQLite3.column_name(self, index.to_i32)
+    String.new LibSQLite3.column_name(self, index)
   end
 
   # Executes this statement with the given binds and returns a `ResultSet`.
@@ -109,32 +109,32 @@ class SQLite3::Statement
 
   # Binds the parameter at the given index to an Int.
   def []=(index : Int, value : Nil)
-    check LibSQLite3.bind_null(self, index.to_i32)
+    check LibSQLite3.bind_null(self, index)
   end
 
   # Binds the parameter at the given index to an Int32.
   def []=(index : Int, value : Int32)
-    check LibSQLite3.bind_int(self, index.to_i32, value)
+    check LibSQLite3.bind_int(self, index, value)
   end
 
   # Binds the parameter at the given index to an Int64.
   def []=(index : Int, value : Int64)
-    check LibSQLite3.bind_int64(self, index.to_i32, value)
+    check LibSQLite3.bind_int64(self, index, value)
   end
 
   # Binds the parameter at the given index to a Float.
   def []=(index : Int, value : Float)
-    check LibSQLite3.bind_double(self, index.to_i32, value.to_f64)
+    check LibSQLite3.bind_double(self, index, value.to_f64)
   end
 
   # Binds the parameter at the given index to a String.
   def []=(index : Int, value : String)
-    check LibSQLite3.bind_text(self, index.to_i32, value, value.bytesize, nil)
+    check LibSQLite3.bind_text(self, index, value, value.bytesize, nil)
   end
 
   # Binds the parameter at the given index to a BLOB.
   def []=(index : Int, value : Slice(UInt8))
-    check LibSQLite3.bind_blob(self, index.to_i32, value, value.length, nil)
+    check LibSQLite3.bind_blob(self, index, value, value.size, nil)
   end
 
   # Binds a named parameter, using the `:AAAA` naming scheme for parameters.
@@ -190,23 +190,23 @@ class SQLite3::Statement
   end
 
   private def column_int64(index)
-    LibSQLite3.column_int64(self, index.to_i32)
+    LibSQLite3.column_int64(self, index)
   end
 
   private def column_double(index)
-    LibSQLite3.column_double(self, index.to_i32)
+    LibSQLite3.column_double(self, index)
   end
 
   private def column_text(index)
-    LibSQLite3.column_text(self, index.to_i32)
+    LibSQLite3.column_text(self, index)
   end
 
   private def column_blob(index)
-    LibSQLite3.column_blob(self, index.to_i32)
+    LibSQLite3.column_blob(self, index)
   end
 
   private def column_bytes(index)
-    LibSQLite3.column_bytes(self, index.to_i32)
+    LibSQLite3.column_bytes(self, index)
   end
 
   private def check(code)

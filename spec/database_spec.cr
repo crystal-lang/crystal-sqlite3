@@ -46,7 +46,7 @@ describe Database do
 
   it "executes with bind blob" do
     ary = UInt8[0x53, 0x51, 0x4C, 0x69, 0x74, 0x65]
-    rows = with_db(&.execute(%(select cast(? as BLOB)), Slice.new(ary.buffer, ary.length)))
+    rows = with_db(&.execute(%(select cast(? as BLOB)), Slice.new(ary.buffer, ary.size)))
     row = rows[0]
     cell = row[0] as Slice(UInt8)
     cell.to_a.should eq(ary)
