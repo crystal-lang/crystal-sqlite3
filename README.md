@@ -6,12 +6,12 @@ SQLite3 bindings for [Crystal](http://crystal-lang.org/).
 
 [Documentation](http://manastech.github.io/crystal-sqlite3/)
 
-### Projectfile
+### shard.yml
 
-```crystal
-deps do
-  github "manastech/crystal-sqlite3"
-end
+```yml
+dependencies:
+  sqlite3:
+    github: manastech/crystal-sqlite3
 ```
 
 ### Usage
