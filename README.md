@@ -1,4 +1,4 @@
-# crystal-sqlite3
+# crystal-sqlite3 [![Build Status](https://travis-ci.org/manastech/crystal-sqlite3.svg?branch=master)](https://travis-ci.org/manastech/crystal-sqlite3)
 
 SQLite3 bindings for [Crystal](http://crystal-lang.org/).
 
