@@ -46,7 +46,7 @@ describe Database do
 
   it "executes with bind blob" do
     ary = UInt8[0x53, 0x51, 0x4C, 0x69, 0x74, 0x65]
-    rows = with_db(&.execute(%(select cast(? as BLOB)), Slice.new(ary.buffer, ary.size)))
+    rows = with_db(&.execute(%(select cast(? as BLOB)), Slice.new(ary.to_unsafe, ary.size)))
     row = rows[0]
     cell = row[0] as Slice(UInt8)
     cell.to_a.should eq(ary)
@@ -105,7 +105,6 @@ describe Database do
     with_db(&.get_first_row(%(select 1))).should eq([1])
   end
 
-
   it "gets first value" do
     with_db(&.get_first_value(%(select 1))).should eq(1)
   end
@@ -124,7 +123,7 @@ describe Database do
               rs.next
               break
             end
-          rescue  e : SQLite3::Exception
+          rescue e : SQLite3::Exception
             fail("Expected no exception, but got \"#{e.message}\"")
           end
 
