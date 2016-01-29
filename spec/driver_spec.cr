@@ -14,6 +14,18 @@ def sql(s)
   "#{s}"
 end
 
+def assert_single_read(result_set, value_type, value)
+  result_set.move_next.should be_true
+  result_set.read(value_type).should eq(value)
+  result_set.move_next.should be_false
+end
+
+def assert_single_read?(result_set, value_type, value)
+  result_set.move_next.should be_true
+  result_set.read?(value_type).should eq(value)
+  result_set.move_next.should be_false
+end
+
 describe Driver do
   it "should register sqlite3 name" do
     DB.driver_class("sqlite3").should eq(SQLite3::Driver)
@@ -30,36 +42,64 @@ describe Driver do
     it "executes and select {{value.id}}" do
       with_db do |db|
         result_set = db.exec("select #{sql({{value}})}")
-        result_set.move_next.should be_true
-        result_set.read(typeof({{value}})).should eq({{value}})
-        result_set.move_next.should be_false
+        assert_single_read result_set, typeof({{value}}), {{value}}
       end
     end
 
     it "executes and select {{value.id}} as nillable" do
       with_db do |db|
         result_set = db.exec("select #{sql({{value}})}")
-        result_set.move_next.should be_true
-        result_set.read?(typeof({{value}})).should eq({{value}})
-        result_set.move_next.should be_false
+        assert_single_read? result_set, typeof({{value}}), {{value}}
       end
     end
 
     it "executes and select nil as type of {{value.id}}" do
       with_db do |db|
         result_set = db.exec("select null")
-        result_set.move_next.should be_true
-        result_set.read?(typeof({{value}})).should be_nil
-        result_set.move_next.should be_false
+        assert_single_read? result_set, typeof({{value}}), nil
       end
     end
 
-  # it "executes with bind #{value}" do
-  #   with_db(&.execute(%(select ?), value)).should eq([[value]])
-  # end
+    it "executes with bind {{value.id}}" do
+      with_db do |db|
+        result_set = db.exec(%(select ?), {{value}})
+        assert_single_read result_set, typeof({{value}}), {{value}}
+      end
+    end
 
-  # it "executes with bind #{value} as array" do
-  #   with_db(&.execute(%(select ?), [value])).should eq([[value]])
-  # end
+    it "executes with bind {{value.id}} read as nillable" do
+      with_db do |db|
+        result_set = db.exec(%(select ?), {{value}})
+        assert_single_read? result_set, typeof({{value}}), {{value}}
+      end
+    end
+
+    it "executes with bind nil as typeof {{value.id}}" do
+      with_db do |db|
+        result_set = db.exec(%(select ?), nil)
+        assert_single_read? result_set, typeof({{value}}), nil
+      end
+    end
+
+    it "executes with bind {{value.id}} as array" do
+      with_db do |db|
+        result_set = db.exec(%(select ?), [{{value}}])
+        assert_single_read result_set, typeof({{value}}), {{value}}
+      end
+    end
   {% end %}
+
+  it "executes with named bind using symbol" do
+    with_db do |db|
+      result_set = db.exec(%(select :value), {value: "hello"})
+      assert_single_read result_set, String, "hello"
+    end
+  end
+
+  it "executes with named bind using string" do
+    with_db do |db|
+      result_set = db.exec(%(select :value), {"value": "hello"})
+      assert_single_read result_set, String, "hello"
+    end
+  end
 end

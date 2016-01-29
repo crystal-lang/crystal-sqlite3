@@ -27,6 +27,7 @@ describe Database do
     end
   end
 
+  # pending
   it "executes and selects blob" do
     rows = with_db_old(&.execute(%(select X'53514C697465')))
     row = rows[0]
