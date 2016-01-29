@@ -89,6 +89,23 @@ describe Driver do
     end
   {% end %}
 
+  it "executes and selects blob" do
+    with_db do |db|
+      result_set = db.exec %(select X'53514C697465')
+      result_set.move_next
+      result_set.read(Slice(UInt8)).to_a.should eq([0x53, 0x51, 0x4C, 0x69, 0x74, 0x65])
+    end
+  end
+
+  it "executes with bind blob" do
+    with_db do |db|
+      ary = UInt8[0x53, 0x51, 0x4C, 0x69, 0x74, 0x65]
+      result_set = db.exec %(select cast(? as BLOB)), Slice.new(ary.to_unsafe, ary.size)
+      result_set.move_next
+      result_set.read(Slice(UInt8)).to_a.should eq(ary)
+    end
+  end
+
   it "executes with named bind using symbol" do
     with_db do |db|
       result_set = db.exec(%(select :value), {value: "hello"})

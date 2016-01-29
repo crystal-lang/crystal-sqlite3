@@ -44,7 +44,17 @@ class SQLite3::ResultSet2 < DB::ResultSet
   end
 
   def read(t : Float64.class) : Float64
-    moving_column { LibSQLite3.column_double(self, @column_index) }
+    moving_column { |col| LibSQLite3.column_double(self, col) }
+  end
+
+  def read(t : Slice(UInt8).class) : Slice(UInt8)
+    moving_column do |col|
+      blob = LibSQLite3.column_blob(self, col)
+      bytes = LibSQLite3.column_bytes(self, col)
+      ptr = Pointer(UInt8).malloc(bytes)
+      ptr.copy_from(blob, bytes)
+      Slice(UInt8).new(ptr, bytes)
+    end
   end
 
   def to_unsafe
@@ -52,7 +62,11 @@ class SQLite3::ResultSet2 < DB::ResultSet
   end
 
   private def read_nil?
-    LibSQLite3.column_type(self, @column_index) == Type::NULL
+    column_sqlite_type == Type::NULL
+  end
+
+  private def column_sqlite_type
+    LibSQLite3.column_type(self, @column_index)
   end
 
   # :nodoc:

@@ -47,6 +47,10 @@ class SQLite3::Statement2 < DB::Statement
     check LibSQLite3.bind_text(self, index, value, value.bytesize, nil)
   end
 
+  private def bind_arg(index, value : Slice(UInt8))
+    check LibSQLite3.bind_blob(self, index, value, value.size, nil)
+  end
+
   private def check(code)
     raise Exception.new(@driver) unless code == 0
   end
