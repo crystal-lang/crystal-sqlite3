@@ -1,4 +1,4 @@
-# crystal-sqlite3
+# crystal-sqlite3 [![Build Status](https://travis-ci.org/manastech/crystal-sqlite3.svg?branch=master)](https://travis-ci.org/manastech/crystal-sqlite3)
 
 SQLite3 bindings for [Crystal](http://crystal-lang.org/).
 
@@ -6,12 +6,12 @@ SQLite3 bindings for [Crystal](http://crystal-lang.org/).
 
 [Documentation](http://manastech.github.io/crystal-sqlite3/)
 
-### Projectfile
+### shard.yml
 
-```crystal
-deps do
-  github "manastech/crystal-sqlite3"
-end
+```yml
+dependencies:
+  sqlite3:
+    github: manastech/crystal-sqlite3
 ```
 
 ### Usage
