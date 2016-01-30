@@ -57,6 +57,14 @@ class SQLite3::ResultSet2 < DB::ResultSet
     end
   end
 
+  def column_count
+    LibSQLite3.column_count(self)
+  end
+
+  def column_name(index)
+    String.new LibSQLite3.column_name(self, index)
+  end
+
   def to_unsafe
     @statement.to_unsafe
   end

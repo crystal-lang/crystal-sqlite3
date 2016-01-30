@@ -8,6 +8,10 @@ class SQLite3::Statement2 < DB::Statement
     LibSQLite3.reset(self)
   end
 
+  protected def on_close
+    check LibSQLite3.finalize(self)
+  end
+
   protected def add_parameter(index : Int32, value)
     bind_arg(index, value)
   end

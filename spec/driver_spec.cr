@@ -6,6 +6,10 @@ ensure
   File.delete(DB_FILENAME)
 end
 
+def with_mem_db
+  yield DB.open "sqlite3", {"database": ":memory:"}
+end
+
 def sql(s : String)
   "#{s.inspect}"
 end
@@ -117,6 +121,32 @@ describe Driver do
     with_db do |db|
       result_set = db.exec(%(select :value), {"value": "hello"})
       assert_single_read result_set, String, "hello"
+    end
+  end
+
+  it "gets column count" do
+    with_mem_db do |db|
+      db.exec_non_query "create table person (name string, age integer)"
+      db.exec_non_query %(insert into person values ("foo", 10))
+
+      run = false
+      db.exec_query_each "select * from person" do |result_set|
+        run = true
+        result_set.column_count.should eq(2)
+      end
+      run.should be_true
+    end
+  end
+
+  it "gets column name" do
+    with_mem_db do |db|
+      db.exec_non_query "create table person (name string, age integer)"
+      db.exec_non_query %(insert into person values ("foo", 10))
+
+      db.exec_query_each("select * from person") do |result_set|
+        result_set.column_name(0).should eq("name")
+        result_set.column_name(1).should eq("age")
+      end
     end
   end
 end
