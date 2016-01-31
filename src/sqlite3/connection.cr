@@ -13,6 +13,10 @@ class SQLite3::Connection < DB::Connection
     LibSQLite3.close_v2(self)
   end
 
+  def last_insert_id : Int64
+    LibSQLite3.last_insert_rowid(self)
+  end
+
   def to_unsafe
     @db
   end

@@ -18,6 +18,16 @@ def sql(s)
   "#{s}"
 end
 
+def sqlite_type_for(v)
+  case v
+  when String          ; "text"
+  when Int32, Int64    ; "int"
+  when Float32, Float64; "float"
+  else
+    raise "not implemented for #{typeof(v)}"
+  end
+end
+
 def assert_single_read(rs, value_type, value)
   rs.move_next.should be_true
   rs.read(value_type).should eq(value)
@@ -146,24 +156,62 @@ describe Driver do
     end
   end
 
-  # TODO get other value types from table
-  # TODO get many rows from table
-  # TODO get_last_row_id
   # TODO gets column types
-  # TODO migrate quotes to std
 
-  it "gets values from table" do
+  it "gets last insert row id" do
+    with_mem_db do |db|
+      cnn = db.connection
+      cnn.exec "create table person (name string, age integer)"
+
+      cnn.last_insert_id.should eq(0)
+      cnn.exec %(insert into person values ("foo", 10))
+      cnn.last_insert_id.should eq(1)
+    end
+  end
+
+  {% for value in [1, 1_i64, "hello", 1.5, 1.5_f32] %}
+    it "insert/get value {{value.id}} from table" do
+      with_db do |db|
+        db.exec "create table table1 (col1 #{sqlite_type_for({{value}})})"
+        db.exec %(insert into table1 values (#{sql({{value}})}))
+        db.scalar(typeof({{value}}), "select col1 from table1").should eq({{value}})
+      end
+    end
+  {% end %}
+
+  it "insert/get blob value from table" do
+    with_db do |db|
+      ary = UInt8[0x53, 0x51, 0x4C, 0x69, 0x74, 0x65]
+
+      db.exec "create table table1 (col1 blob)"
+      db.exec %(insert into table1 values (?)), Slice.new(ary.to_unsafe, ary.size)
+      slice = db.scalar(Slice(UInt8), "select col1 from table1")
+      slice.to_a.should eq(ary)
+    end
+  end
+
+  it "gets many rows from table" do
     with_mem_db do |db|
       db.exec "create table person (name string, age integer)"
       db.exec %(insert into person values ("foo", 10))
+      db.exec %(insert into person values ("bar", 20))
+      db.exec %(insert into person values ("baz", 30))
 
+      names = [] of String
+      ages = [] of Int32
       db.query "select * from person" do |rs|
-        rs.move_next.should be_true
-        rs.read(String).should eq("foo")
-        rs.read(Int32).should eq(10)
-        rs.move_next.should be_false
+        rs.each do
+          names << rs.read(String)
+          ages << rs.read(Int32)
+        end
       end
+      names.should eq(["foo", "bar", "baz"])
+      ages.should eq([10, 20, 30])
     end
+  end
+
+  it "quotes" do
+    Driver.quote("'hello'").should eq("''hello''")
   end
 
   it "ensures statements are closed" do
