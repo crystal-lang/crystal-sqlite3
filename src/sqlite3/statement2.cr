@@ -13,7 +13,7 @@ class SQLite3::Statement2 < DB::Statement
   end
 
   protected def add_parameter(index : Int32, value)
-    bind_arg(index, value)
+    bind_arg(index + 1, value)
   end
 
   protected def add_parameter(name : String, value)
