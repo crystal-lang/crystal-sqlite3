@@ -13,7 +13,7 @@ class SQLite3::ResultSet2 < DB::ResultSet
     when LibSQLite3::Code::DONE
       false
     else
-      raise Exception.new(@statement.driver)
+      raise Exception.new(@statement.connection)
     end
   end
 
@@ -63,6 +63,10 @@ class SQLite3::ResultSet2 < DB::ResultSet
 
   def column_name(index)
     String.new LibSQLite3.column_name(self, index)
+  end
+
+  def column_type(index : Int32)
+    raise "not implemented"
   end
 
   def to_unsafe

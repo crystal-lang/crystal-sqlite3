@@ -27,7 +27,6 @@ describe Database do
     end
   end
 
-  # pending
   it "executes and selects blob" do
     rows = with_db_old(&.execute(%(select X'53514C697465')))
     row = rows[0]
@@ -60,6 +59,7 @@ describe Database do
     end
   end
 
+  # pending
   it "gets column types" do
     Database.new(":memory:") do |db|
       db.execute "create table person (name string, age integer)"

@@ -1,10 +1,10 @@
 class SQLite3::Statement2 < DB::Statement
-  def initialize(@driver, sql)
-    check LibSQLite3.prepare_v2(@driver, sql, sql.bytesize + 1, out @stmt, nil)
-    # @closed = false
+  def initialize(connection, sql)
+    super(connection)
+    check LibSQLite3.prepare_v2(@connection, sql, sql.bytesize + 1, out @stmt, nil)
   end
 
-  protected def before_execute
+  protected def begin_parameters
     LibSQLite3.reset(self)
   end
 
@@ -23,7 +23,7 @@ class SQLite3::Statement2 < DB::Statement
     bind_arg(index, value)
   end
 
-  protected def execute
+  protected def perform
     ResultSet2.new(self)
   end
 
@@ -56,7 +56,7 @@ class SQLite3::Statement2 < DB::Statement
   end
 
   private def check(code)
-    raise Exception.new(@driver) unless code == 0
+    raise Exception.new(@connection) unless code == 0
   end
 
   def to_unsafe
