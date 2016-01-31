@@ -1,13 +1,13 @@
 require "./spec_helper"
 
 def with_db(&block : DB::Database ->)
-  DB.open "sqlite3", {"database": DB_FILENAME}, &block
+  DB.open "sqlite3", DB_FILENAME, &block
 ensure
   File.delete(DB_FILENAME)
 end
 
 def with_mem_db(&block : DB::Database ->)
-  DB.open "sqlite3", {"database": ":memory:"}, &block
+  DB.open "sqlite3", ":memory:", &block
 end
 
 def sql(s : String)
@@ -156,7 +156,23 @@ describe Driver do
     end
   end
 
-  # TODO gets column types
+  it "gets column types" do
+    with_mem_db do |db|
+      db.exec "create table table1 (aText text, anInteger integer, aReal real, aBlob blob)"
+      db.exec "insert into table1 (aText, anInteger, aReal, aBlob) values ('a', 1, 1.5, X'53')"
+
+      # sqlite is unable to get column_type information
+      # from the query itself without executing and getting
+      # actual data.
+      db.query "select * from table1" do |rs|
+        rs.move_next
+        rs.column_type(0).should eq(String)
+        rs.column_type(1).should eq(Int64)
+        rs.column_type(2).should eq(Float64)
+        rs.column_type(3).should eq(Slice(UInt8))
+      end
+    end
+  end
 
   it "gets last insert row id" do
     with_mem_db do |db|
@@ -210,19 +226,15 @@ describe Driver do
     end
   end
 
-  it "quotes" do
-    Driver.quote("'hello'").should eq("''hello''")
-  end
-
   it "ensures statements are closed" do
     begin
-      DB.open "sqlite3", {"database": DB_FILENAME} do |db|
+      DB.open "sqlite3", DB_FILENAME do |db|
         db.exec %(create table if not exists a (i int not null, str text not null);)
         db.exec %(insert into a (i, str) values (23, "bai bai");)
       end
 
       2.times do |i|
-        DB.open "sqlite3", {"database": DB_FILENAME} do |db|
+        DB.open "sqlite3", DB_FILENAME do |db|
           begin
             db.query("SELECT i, str FROM a WHERE i = ?", 23) do |rs|
               rs.move_next

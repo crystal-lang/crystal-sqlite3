@@ -66,7 +66,15 @@ class SQLite3::ResultSet2 < DB::ResultSet
   end
 
   def column_type(index : Int32)
-    raise "not implemented"
+    case LibSQLite3.column_type(self, index)
+    when Type::INTEGER; Int64
+    when Type::FLOAT  ; Float64
+    when Type::BLOB   ; Slice(UInt8)
+    when Type::TEXT   ; String
+    when Type::NULL   ; Nil
+    else
+      raise "not implemented"
+    end
   end
 
   def to_unsafe

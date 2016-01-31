@@ -1,8 +1,7 @@
 class SQLite3::Connection < DB::Connection
-  def initialize(options)
+  def initialize(connection_string)
     super
-    filename = options["database"]
-    check LibSQLite3.open_v2(filename, out @db, (LibSQLite3::Flag::READWRITE | LibSQLite3::Flag::CREATE), nil)
+    check LibSQLite3.open_v2(connection_string, out @db, (LibSQLite3::Flag::READWRITE | LibSQLite3::Flag::CREATE), nil)
   end
 
   def prepare(query)
