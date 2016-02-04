@@ -1,5 +1,7 @@
 require "./spec_helper"
 
+DB_FILENAME = "./test.db"
+
 def with_db(&block : DB::Database ->)
   DB.open "sqlite3:#{DB_FILENAME}", &block
 ensure
