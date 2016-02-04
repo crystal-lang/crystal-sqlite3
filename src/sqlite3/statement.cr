@@ -1,4 +1,4 @@
-class SQLite3::Statement2 < DB::Statement
+class SQLite3::Statement < DB::Statement
   def initialize(connection, sql)
     super(connection)
     check LibSQLite3.prepare_v2(@connection, sql, sql.bytesize + 1, out @stmt, nil)
@@ -9,7 +9,7 @@ class SQLite3::Statement2 < DB::Statement
     args.each_with_index(1) do |arg, index|
       bind_arg(index, arg)
     end
-    ResultSet2.new(self)
+    ResultSet.new(self)
   end
 
   protected def perform_exec(args : Slice(DB::Any))

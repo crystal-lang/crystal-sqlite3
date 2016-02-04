@@ -14,7 +14,7 @@ class SQLite3::Connection < DB::Connection
   end
 
   def build_statement(query)
-    Statement2.new(self, query)
+    Statement.new(self, query)
   end
 
   def do_close
