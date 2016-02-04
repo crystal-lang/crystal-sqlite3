@@ -1,10 +1,14 @@
 require "db"
 require "../src/sqlite3"
 
-DB.open "sqlite3", ":memory:" do |db|
+DB.open "sqlite3://%3Amemory%3A" do |db|
   db.exec "create table contacts (name string, age integer)"
   db.exec "insert into contacts values (?, ?)", "John Doe", 30
-  db.exec "insert into contacts values (:name, :age)", {name: "Sarah", age: 33}
+
+  args = [] of DB::Any
+  args << "Sarah"
+  args << 33
+  db.exec "insert into contacts values (?, ?)", args
 
   puts "max age:"
   puts db.scalar "select max(age) from contacts" # => 33

@@ -4,27 +4,28 @@ class SQLite3::Statement2 < DB::Statement
     check LibSQLite3.prepare_v2(@connection, sql, sql.bytesize + 1, out @stmt, nil)
   end
 
-  protected def begin_parameters
+  protected def perform_query(args : Slice(DB::Any))
     LibSQLite3.reset(self)
+    args.each_with_index(1) do |arg, index|
+      bind_arg(index, arg)
+    end
+    ResultSet2.new(self)
+  end
+
+  protected def perform_exec(args : Slice(DB::Any))
+    rs = perform_query(args)
+    rs.move_next
+    rs.close
+
+    rows_affected = LibSQLite3.changes(connection)
+    last_id = LibSQLite3.last_insert_rowid(connection)
+
+    DB::ExecResult.new rows_affected, last_id
   end
 
   protected def on_close
+    super
     check LibSQLite3.finalize(self)
-  end
-
-  protected def add_parameter(index : Int32, value)
-    bind_arg(index + 1, value)
-  end
-
-  protected def add_parameter(name : String, value)
-    converted_name = ":#{name}"
-    index = LibSQLite3.bind_parameter_index(self, converted_name)
-    raise "Unknown parameter: #{name}" if index == 0
-    bind_arg(index, value)
-  end
-
-  protected def perform
-    ResultSet2.new(self)
   end
 
   private def bind_arg(index, value : Nil)

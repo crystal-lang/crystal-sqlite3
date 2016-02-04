@@ -1,19 +1,26 @@
 class SQLite3::Connection < DB::Connection
-  def initialize(connection_string)
+  def initialize(database)
     super
-    check LibSQLite3.open_v2(connection_string, out @db, (LibSQLite3::Flag::READWRITE | LibSQLite3::Flag::CREATE), nil)
+    filename = self.class.filename(database.uri)
+    check LibSQLite3.open_v2(filename, out @db, (LibSQLite3::Flag::READWRITE | LibSQLite3::Flag::CREATE), nil)
   end
 
-  def prepare(query)
+  def self.filename(uri : URI)
+    URI.unescape (if path = uri.path
+      (uri.host || "") + path
+    else
+      uri.opaque.not_nil!
+    end)
+  end
+
+  def build_statement(query)
     Statement2.new(self, query)
   end
 
-  def perform_close
+  def do_close
+    @statements_cache.values.each &.close
+    super
     LibSQLite3.close_v2(self)
-  end
-
-  def last_insert_id : Int64
-    LibSQLite3.last_insert_rowid(self)
   end
 
   def to_unsafe

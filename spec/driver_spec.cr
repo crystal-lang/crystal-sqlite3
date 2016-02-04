@@ -1,13 +1,13 @@
 require "./spec_helper"
 
 def with_db(&block : DB::Database ->)
-  DB.open "sqlite3", DB_FILENAME, &block
+  DB.open "sqlite3:#{DB_FILENAME}", &block
 ensure
   File.delete(DB_FILENAME)
 end
 
 def with_mem_db(&block : DB::Database ->)
-  DB.open "sqlite3", ":memory:", &block
+  DB.open "sqlite3://%3Amemory%3A", &block
 end
 
 def sql(s : String)
@@ -40,14 +40,29 @@ def assert_single_read?(rs, value_type, value)
   rs.move_next.should be_false
 end
 
+def assert_filename(uri, filename)
+  SQLite3::Connection.filename(URI.parse(uri)).should eq(filename)
+end
+
 describe Driver do
   it "should register sqlite3 name" do
     DB.driver_class("sqlite3").should eq(SQLite3::Driver)
   end
 
+  it "should get filename from uri" do
+    assert_filename("sqlite3:%3Amemory%3A", ":memory:")
+    assert_filename("sqlite3://%3Amemory%3A", ":memory:")
+
+    assert_filename("sqlite3:./file.db", "./file.db")
+    assert_filename("sqlite3://./file.db", "./file.db")
+
+    assert_filename("sqlite3:/path/to/file.db", "/path/to/file.db")
+    assert_filename("sqlite3:///path/to/file.db", "/path/to/file.db")
+  end
+
   it "should use database option as file to open" do
     with_db do |db|
-      db.driver_class.should eq(SQLite3::Driver)
+      db.driver.should be_a(SQLite3::Driver)
       File.exists?(DB_FILENAME).should be_true
     end
   end
@@ -55,7 +70,7 @@ describe Driver do
   {% for value in [1, 1_i64, "hello", 1.5, 1.5_f32] %}
     it "executes and select {{value.id}}" do
       with_db do |db|
-        db.scalar(typeof({{value}}), "select #{sql({{value}})}").should eq({{value}})
+        db.scalar("select #{sql({{value}})}").should eq({{value}})
 
         db.query "select #{sql({{value}})}" do |rs|
           assert_single_read rs, typeof({{value}}), {{value}}
@@ -63,19 +78,9 @@ describe Driver do
       end
     end
 
-    it "executes and select {{value.id}} as nillable" do
-      with_db do |db|
-        db.scalar?(typeof({{value}}), "select #{sql({{value}})}").should eq({{value}})
-
-        db.query "select #{sql({{value}})}" do |rs|
-          assert_single_read? rs, typeof({{value}}), {{value}}
-        end
-      end
-    end
-
     it "executes and select nil as type of {{value.id}}" do
       with_db do |db|
-        db.scalar?(typeof({{value}}), "select null").should be_nil
+        db.scalar("select null").should be_nil
 
         db.query "select null" do |rs|
           assert_single_read? rs, typeof({{value}}), nil
@@ -85,32 +90,26 @@ describe Driver do
 
     it "executes with bind {{value.id}}" do
       with_db do |db|
-        db.scalar(typeof({{value}}), %(select ?), {{value}}).should eq({{value}})
-      end
-    end
-
-    it "executes with bind {{value.id}} read as nillable" do
-      with_db do |db|
-        db.scalar?(typeof({{value}}), %(select ?), {{value}}).should eq({{value}})
+        db.scalar(%(select ?), {{value}}).should eq({{value}})
       end
     end
 
     it "executes with bind nil as typeof {{value.id}}" do
       with_db do |db|
-        db.scalar?(typeof({{value}}), %(select ?), nil).should be_nil
+        db.scalar("select ?", nil).should be_nil
       end
     end
 
     it "executes with bind {{value.id}} as array" do
       with_db do |db|
-        db.scalar?(typeof({{value}}), %(select ?), [{{value}}]).should eq({{value}})
+        db.scalar(%(select ?), [{{value}}]).should eq({{value}})
       end
     end
   {% end %}
 
   it "executes and selects blob" do
     with_db do |db|
-      slice = db.scalar(Slice(UInt8), %(select X'53514C697465'))
+      slice = db.scalar(%(select X'53514C697465')) as Slice(UInt8)
       slice.to_a.should eq([0x53, 0x51, 0x4C, 0x69, 0x74, 0x65])
     end
   end
@@ -118,20 +117,8 @@ describe Driver do
   it "executes with bind blob" do
     with_db do |db|
       ary = UInt8[0x53, 0x51, 0x4C, 0x69, 0x74, 0x65]
-      slice = db.scalar Slice(UInt8), %(select cast(? as BLOB)), Slice.new(ary.to_unsafe, ary.size)
+      slice = db.scalar(%(select cast(? as BLOB)), Slice.new(ary.to_unsafe, ary.size)) as Slice(UInt8)
       slice.to_a.should eq(ary)
-    end
-  end
-
-  it "executes with named bind using symbol" do
-    with_db do |db|
-      db.scalar(String, %(select :value), {value: "hello"}).should eq("hello")
-    end
-  end
-
-  it "executes with named bind using string" do
-    with_db do |db|
-      db.scalar(String, %(select :value), {"value": "hello"}).should eq("hello")
     end
   end
 
@@ -176,12 +163,13 @@ describe Driver do
 
   it "gets last insert row id" do
     with_mem_db do |db|
-      cnn = db.connection
-      cnn.exec "create table person (name string, age integer)"
+      db.exec "create table person (name string, age integer)"
 
-      cnn.last_insert_id.should eq(0)
-      cnn.exec %(insert into person values ("foo", 10))
-      cnn.last_insert_id.should eq(1)
+      db.exec %(insert into person values ("foo", 10))
+
+      res = db.exec %(insert into person values ("foo", 10))
+      res.last_insert_id.should eq(2)
+      res.rows_affected.should eq(1)
     end
   end
 
@@ -190,7 +178,7 @@ describe Driver do
       with_db do |db|
         db.exec "create table table1 (col1 #{sqlite_type_for({{value}})})"
         db.exec %(insert into table1 values (#{sql({{value}})}))
-        db.scalar(typeof({{value}}), "select col1 from table1").should eq({{value}})
+        db.scalar("select col1 from table1").should eq({{value}})
       end
     end
   {% end %}
@@ -201,7 +189,8 @@ describe Driver do
 
       db.exec "create table table1 (col1 blob)"
       db.exec %(insert into table1 values (?)), Slice.new(ary.to_unsafe, ary.size)
-      slice = db.scalar(Slice(UInt8), "select col1 from table1")
+
+      slice = db.scalar("select cast(col1 as blob) from table1") as Slice(UInt8)
       slice.to_a.should eq(ary)
     end
   end
@@ -228,13 +217,13 @@ describe Driver do
 
   it "ensures statements are closed" do
     begin
-      DB.open "sqlite3", DB_FILENAME do |db|
+      DB.open "sqlite3:#{DB_FILENAME}" do |db|
         db.exec %(create table if not exists a (i int not null, str text not null);)
         db.exec %(insert into a (i, str) values (23, "bai bai");)
       end
 
       2.times do |i|
-        DB.open "sqlite3", DB_FILENAME do |db|
+        DB.open "sqlite3:#{DB_FILENAME}" do |db|
           begin
             db.query("SELECT i, str FROM a WHERE i = ?", 23) do |rs|
               rs.move_next

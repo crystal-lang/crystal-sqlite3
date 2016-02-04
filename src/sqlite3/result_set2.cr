@@ -1,6 +1,11 @@
 class SQLite3::ResultSet2 < DB::ResultSet
   @column_index = 0
 
+  protected def do_close
+    super
+    LibSQLite3.reset(self)
+  end
+
   # Advances to the next row. Returns `true` if there's a next row,
   # `false` otherwise. Must be called at least once to advance to the first
   # row.

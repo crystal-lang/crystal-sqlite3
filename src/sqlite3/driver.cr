@@ -1,6 +1,6 @@
 class SQLite3::Driver < DB::Driver
-  def build_connection
-    SQLite3::Connection.new(connection_string)
+  def build_connection(db)
+    SQLite3::Connection.new(db)
   end
 end
 

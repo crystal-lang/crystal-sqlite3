@@ -6,37 +6,37 @@ lib LibSQLite3
   type Statement = Void*
 
   enum Flag
-    READONLY         = 0x00000001  # Ok for sqlite3_open_v2()
-    READWRITE        = 0x00000002  # Ok for sqlite3_open_v2()
-    CREATE           = 0x00000004  # Ok for sqlite3_open_v2()
-    DELETEONCLOSE    = 0x00000008  # VFS only
-    EXCLUSIVE        = 0x00000010  # VFS only
-    AUTOPROXY        = 0x00000020  # VFS only
-    URI              = 0x00000040  # Ok for sqlite3_open_v2()
-    MEMORY           = 0x00000080  # Ok for sqlite3_open_v2()
-    MAIN_DB          = 0x00000100  # VFS only
-    TEMP_DB          = 0x00000200  # VFS only
-    TRANSIENT_DB     = 0x00000400  # VFS only
-    MAIN_JOURNAL     = 0x00000800  # VFS only
-    TEMP_JOURNAL     = 0x00001000  # VFS only
-    SUBJOURNAL       = 0x00002000  # VFS only
-    MASTER_JOURNAL   = 0x00004000  # VFS only
-    NOMUTEX          = 0x00008000  # Ok for sqlite3_open_v2()
-    FULLMUTEX        = 0x00010000  # Ok for sqlite3_open_v2()
-    SHAREDCACHE      = 0x00020000  # Ok for sqlite3_open_v2()
-    PRIVATECACHE     = 0x00040000  # Ok for sqlite3_open_v2()
-    WAL              = 0x00080000  # VFS only
+    READONLY       = 0x00000001 # Ok for sqlite3_open_v2()
+    READWRITE      = 0x00000002 # Ok for sqlite3_open_v2()
+    CREATE         = 0x00000004 # Ok for sqlite3_open_v2()
+    DELETEONCLOSE  = 0x00000008 # VFS only
+    EXCLUSIVE      = 0x00000010 # VFS only
+    AUTOPROXY      = 0x00000020 # VFS only
+    URI            = 0x00000040 # Ok for sqlite3_open_v2()
+    MEMORY         = 0x00000080 # Ok for sqlite3_open_v2()
+    MAIN_DB        = 0x00000100 # VFS only
+    TEMP_DB        = 0x00000200 # VFS only
+    TRANSIENT_DB   = 0x00000400 # VFS only
+    MAIN_JOURNAL   = 0x00000800 # VFS only
+    TEMP_JOURNAL   = 0x00001000 # VFS only
+    SUBJOURNAL     = 0x00002000 # VFS only
+    MASTER_JOURNAL = 0x00004000 # VFS only
+    NOMUTEX        = 0x00008000 # Ok for sqlite3_open_v2()
+    FULLMUTEX      = 0x00010000 # Ok for sqlite3_open_v2()
+    SHAREDCACHE    = 0x00020000 # Ok for sqlite3_open_v2()
+    PRIVATECACHE   = 0x00040000 # Ok for sqlite3_open_v2()
+    WAL            = 0x00080000 # VFS only
   end
 
   enum Code
-    ROW = 100
+    ROW  = 100
     DONE = 101
   end
 
   alias Callback = (Void*, Int32, UInt8**, UInt8**) -> Int32
 
   fun open = sqlite3_open_v2(filename : UInt8*, db : SQLite3*) : Int32
-  fun open_v2 = sqlite3_open_v2(filename : UInt8*, db : SQLite3*, flags: Flag, zVfs : UInt8*) : Int32
+  fun open_v2 = sqlite3_open_v2(filename : UInt8*, db : SQLite3*, flags : Flag, zVfs : UInt8*) : Int32
 
   fun errcode = sqlite3_errcode(SQLite3) : Int32
   fun errmsg = sqlite3_errmsg(SQLite3) : UInt8*
@@ -62,6 +62,7 @@ lib LibSQLite3
   fun reset = sqlite3_reset(stmt : Statement) : Int32
   fun column_name = sqlite3_column_name(stmt : Statement, idx : Int32) : UInt8*
   fun last_insert_rowid = sqlite3_last_insert_rowid(db : SQLite3) : Int64
+  fun changes = sqlite3_changes(db : SQLite3) : Int32
 
   fun finalize = sqlite3_finalize(stmt : Statement) : Int32
   fun close_v2 = sqlite3_close_v2(SQLite3) : Int32
