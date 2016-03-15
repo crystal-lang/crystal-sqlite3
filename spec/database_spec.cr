@@ -8,10 +8,51 @@ ensure
   File.delete(DB_FILENAME)
 end
 
+private def with_db(name)
+  yield Database.new name
+ensure
+  File.delete(name)
+end
+
 describe Database do
   it "opens a database" do
     with_db do |db|
       File.exists?(DB_FILENAME).should be_true
+    end
+  end
+
+  it "opens a database and then backs it up to another db" do
+    with_db do |db|
+      db.execute "create table person (name string, age integer)"
+      db.execute "insert into person values (\"foo\", 10)"
+      with_db("./test2.db") do |backup_database|
+        db.dump(backup_database)
+
+        backup_rows = backup_database.execute "select * from person"
+        source_rows = db.execute "select * from person"
+        backup_rows.should eq(source_rows)
+      end
+    end
+  end
+
+  it "opens a database, inserts records, dumps to an in-memory db, insers some more, then dumps to the source" do
+    with_db do |db|
+      db.execute "create table person (name string, age integer)"
+      db.execute "insert into person values (\"foo\", 10)"
+      in_memory_db = Database.new("file:memdb1?mode=memory&cache=shared",
+        LibSQLite3::Flag::URI | LibSQLite3::Flag::CREATE | LibSQLite3::Flag::READWRITE |
+          LibSQLite3::Flag::FULLMUTEX)
+      source_rows = db.execute "select * from person"
+
+      db.dump(in_memory_db)
+      in_memory_db_rows = in_memory_db.execute "select * from person"
+      in_memory_db_rows.should eq(source_rows)
+      in_memory_db.execute "insert into person values (\"bar\", 22)"
+      in_memory_db.dump(db)
+
+      in_memory_db_rows = in_memory_db.execute "select * from person"
+      source_rows = db.execute "select * from person"
+      in_memory_db_rows.should eq(source_rows)
     end
   end
 
