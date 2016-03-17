@@ -14,7 +14,7 @@
 class SQLite3::Database
   # Creates a new Database object that opens the given file.
   def initialize(filename)
-    code = LibSQLite3.open_v2(filename, out @db, (LibSQLite3::Flag::READWRITE | LibSQLite3::Flag::CREATE), nil)
+    code = LibSQLite3.open_v2(filename, out @db, (SQLite3::Flag::READWRITE | SQLite3::Flag::CREATE), nil)
     if code != 0
       raise Exception.new(@db)
     end
@@ -23,7 +23,7 @@ class SQLite3::Database
 
   # Allows for initialization with specific flags. Primary use case is to allow
   # for sqlite3 URI opening and in memory DB operations.
-  def initialize(filename, flags : LibSQLite3::Flag)
+  def initialize(filename, flags : SQLite3::Flag)
     code = LibSQLite3.open_v2(filename, out @db, flags, nil)
     if code != 0
       raise Exception.new(@db)
