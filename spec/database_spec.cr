@@ -40,8 +40,7 @@ describe Database do
       db.execute "create table person (name string, age integer)"
       db.execute "insert into person values (\"foo\", 10)"
       in_memory_db = Database.new("file:memdb1?mode=memory&cache=shared",
-        SQLite3::Flag::URI | SQLite3::Flag::CREATE | SQLite3::Flag::READWRITE |
-          SQLite3::Flag::FULLMUTEX)
+        SQLite3.flags(URI, CREATE, READWRITE, FULLMUTEX))
       source_rows = db.execute "select * from person"
 
       db.dump(in_memory_db)

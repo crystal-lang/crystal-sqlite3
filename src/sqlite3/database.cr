@@ -14,7 +14,7 @@
 class SQLite3::Database
   # Creates a new Database object that opens the given file.
   def initialize(filename)
-    code = LibSQLite3.open_v2(filename, out @db, (SQLite3::Flag::READWRITE | SQLite3::Flag::CREATE), nil)
+    code = LibSQLite3.open_v2(filename, out @db, SQLite3.flags(READWRITE, CREATE), nil)
     if code != 0
       raise Exception.new(@db)
     end
@@ -43,18 +43,19 @@ class SQLite3::Database
 
   # Dump the database to another SQLite3 instance. This can be used for backing up a SQLite3::Database
   # to disk or the opposite
+  #
   # Example:
-  #    ```
-  #     source_database = SQLite3::Database.new("mydatabase.db")
-  #     in_memory_db = SQLite3::Database.new(
-  #        "file:memdb1?mode=memory&cache=shared",
-  #        LibSQLite3::Flag::URI | LibSQLite3::Flag::CREATE | LibSQLite3::Flag::READWRITE |
-  #        LibSQLite3::Flag::FULLMUTEX)
-  #     source_database.dump(in_memory_db)
-  #     source_database.close()
-  #     in_memory_db.exectute { |row|
-  #      ...
-  #     }
+  #
+  # ```
+  # source_database = SQLite3::Database.new("mydatabase.db")
+  # in_memory_db = SQLite3::Database.new(
+  #   "file:memdb1?mode=memory&cache=shared",
+  #   SQLite3.flags(URI, CREATE, READWRITE, FULLMUTEX))
+  # source_database.dump(in_memory_db)
+  # source_database.close
+  # in_memory_db.exectute do |row|
+  #   # ...
+  # end
   #    ```
   def dump(to : SQLite3::Database)
     backup_item = LibSQLite3.backup_init(to.@db, "main", @db, "main")

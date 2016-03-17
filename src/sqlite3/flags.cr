@@ -1,3 +1,4 @@
+@[Flags]
 enum SQLite3::Flag
   READONLY       = 0x00000001 # Ok for sqlite3_open_v2()
   READWRITE      = 0x00000002 # Ok for sqlite3_open_v2()
@@ -19,4 +20,11 @@ enum SQLite3::Flag
   SHAREDCACHE    = 0x00020000 # Ok for sqlite3_open_v2()
   PRIVATECACHE   = 0x00040000 # Ok for sqlite3_open_v2()
   WAL            = 0x00080000 # VFS only
+end
+
+module SQLite3
+  # Same as doing SQLite3::Flag.flag(*values)
+  macro flags(*values)
+    ::SQLite3::Flag.flags({{*values}})
+  end
 end
