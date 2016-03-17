@@ -3,7 +3,7 @@
 # ```
 # require "sqlite3"
 #
-# db = SQLite3::Database.new( "data.db" )
+# db = SQLite3::Database.new("data.db")
 # db.execute("select * from table") do |row|
 #   p row
 # end
@@ -14,7 +14,17 @@
 class SQLite3::Database
   # Creates a new Database object that opens the given file.
   def initialize(filename)
-    code = LibSQLite3.open_v2(filename, out @db, (LibSQLite3::Flag::READWRITE | LibSQLite3::Flag::CREATE), nil)
+    code = LibSQLite3.open_v2(filename, out @db, (SQLite3::Flag::READWRITE | SQLite3::Flag::CREATE), nil)
+    if code != 0
+      raise Exception.new(@db)
+    end
+    @closed = false
+  end
+
+  # Allows for initialization with specific flags. Primary use case is to allow
+  # for sqlite3 URI opening and in memory DB operations.
+  def initialize(filename, flags : SQLite3::Flag)
+    code = LibSQLite3.open_v2(filename, out @db, flags, nil)
     if code != 0
       raise Exception.new(@db)
     end
@@ -28,6 +38,37 @@ class SQLite3::Database
       yield db
     ensure
       db.close
+    end
+  end
+
+  # Dump the database to another SQLite3 instance. This can be used for backing up a SQLite3::Database
+  # to disk or the opposite
+  # Example:
+  #    ```
+  #     source_database = SQLite3::Database.new("mydatabase.db")
+  #     in_memory_db = SQLite3::Database.new(
+  #        "file:memdb1?mode=memory&cache=shared",
+  #        LibSQLite3::Flag::URI | LibSQLite3::Flag::CREATE | LibSQLite3::Flag::READWRITE |
+  #        LibSQLite3::Flag::FULLMUTEX)
+  #     source_database.dump(in_memory_db)
+  #     source_database.close()
+  #     in_memory_db.exectute { |row|
+  #      ...
+  #     }
+  #    ```
+  def dump(to : SQLite3::Database)
+    backup_item = LibSQLite3.backup_init(to.@db, "main", @db, "main")
+    if backup_item.nil?
+      raise Exception.new(to.@db)
+    end
+    code = LibSQLite3.backup_step(backup_item, -1)
+
+    if code != LibSQLite3::Code::DONE
+      raise Exception.new(to.@db)
+    end
+    code = LibSQLite3.backup_finish(backup_item)
+    if code != LibSQLite3::Code::OKAY
+      raise Exception.new(to.@db)
     end
   end
 
