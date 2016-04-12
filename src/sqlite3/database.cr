@@ -59,7 +59,7 @@ class SQLite3::Database
   #    ```
   def dump(to : SQLite3::Database)
     backup_item = LibSQLite3.backup_init(to.@db, "main", @db, "main")
-    if backup_item.nil?
+    if backup_item.null?
       raise Exception.new(to.@db)
     end
     code = LibSQLite3.backup_step(backup_item, -1)

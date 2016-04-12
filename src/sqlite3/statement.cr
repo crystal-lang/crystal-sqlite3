@@ -1,7 +1,9 @@
 # A statement represents a prepared-but-unexecuted SQL query.
 class SQLite3::Statement
+  getter db
+
   # :nodoc:
-  def initialize(@db, sql)
+  def initialize(@db : Database, sql : String)
     check LibSQLite3.prepare_v2(@db, sql, sql.bytesize + 1, out @stmt, nil)
     @closed = false
   end

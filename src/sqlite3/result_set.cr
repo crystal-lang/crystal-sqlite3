@@ -17,7 +17,7 @@
 # ```
 class SQLite3::ResultSet
   # :nodoc:
-  def initialize(@statement)
+  def initialize(@statement : Statement)
   end
 
   # Returns the number of columns.
@@ -50,7 +50,7 @@ class SQLite3::ResultSet
     when LibSQLite3::Code::DONE
       false
     else
-      raise Exception.new(@db)
+      raise Exception.new(@statement.db)
     end
   end
 
