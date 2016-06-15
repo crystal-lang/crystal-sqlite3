@@ -72,23 +72,31 @@ describe Database do
   it "executes and selects blob" do
     rows = with_db(&.execute(%(select X'53514C697465')))
     row = rows[0]
-    cell = row[0] as Slice(UInt8)
+    cell = row[0].as(Slice(UInt8))
     cell.to_a.should eq([0x53, 0x51, 0x4C, 0x69, 0x74, 0x65])
   end
 
   it "executes with named bind using symbol" do
-    with_db(&.execute(%(select :value), {value: "hello"})).should eq([["hello"]])
+    with_db(&.execute(%(select :value), {:value => "hello"})).should eq([["hello"]])
   end
 
   it "executes with named bind using string" do
-    with_db(&.execute(%(select :value), {"value": "hello"})).should eq([["hello"]])
+    with_db(&.execute(%(select :value), {"value" => "hello"})).should eq([["hello"]])
+  end
+
+  it "executes with named bind using named argument" do
+    with_db(&.execute(%(select :value), {value: "hello"})).should eq([["hello"]])
+  end
+
+  it "executes with named bind using named arguments" do
+    with_db(&.execute(%(select :value), value: "hello")).should eq([["hello"]])
   end
 
   it "executes with bind blob" do
     ary = UInt8[0x53, 0x51, 0x4C, 0x69, 0x74, 0x65]
     rows = with_db(&.execute(%(select cast(? as BLOB)), Slice.new(ary.to_unsafe, ary.size)))
     row = rows[0]
-    cell = row[0] as Slice(UInt8)
+    cell = row[0].as(Slice(UInt8))
     cell.to_a.should eq(ary)
   end
 
@@ -113,11 +121,39 @@ describe Database do
     end
   end
 
+  it "uses named arguments in statement execute" do
+    Database.new(":memory:") do |db|
+      db.execute "create table person (name string, age integer)"
+      db.execute %(insert into person values ("foo", 10))
+      db.execute %(insert into person values ("bar", 2))
+      stmt = db.prepare("select * from person where age > :age")
+      stmt.execute age: 5
+      stmt.step
+      stmt["age"].should eq(10)
+      stmt.types.should eq([Type::TEXT, Type::INTEGER])
+      stmt.close
+    end
+  end
+
   it "gets column by name" do
     Database.new(":memory:") do |db|
       db.execute "create table person (name string, age integer)"
       db.execute %(insert into person values ("foo", 10))
       db.query("select * from person") do |result_set|
+        result_set.next.should be_true
+        result_set["name"].should eq("foo")
+        result_set["age"].should eq(10)
+        expect_raises { result_set["lala"] }
+      end
+    end
+  end
+
+  it "uses named argument in query" do
+    Database.new(":memory:") do |db|
+      db.execute "create table person (name string, age integer)"
+      db.execute %(insert into person values ("foo", 10))
+      db.execute %(insert into person values ("bar", 2))
+      db.query("select * from person where age > :age", age: 5) do |result_set|
         result_set.next.should be_true
         result_set["name"].should eq("foo")
         result_set["age"].should eq(10)

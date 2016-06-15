@@ -61,20 +61,38 @@ class SQLite3::Statement
   # Executes this statement with the given binds and returns a `ResultSet`.
   def execute(binds : Enumerable)
     reset
-    # TODO use offset after Crystal 0.6.2
-    binds.each_with_index do |bind_value, index|
-      self[index + 1] = bind_value
+    binds.each_with_index(1) do |bind_value, index|
+      self[index] = bind_value
+    end
+    ResultSet.new self
+  end
+
+  # Executes this statement with the given binds and returns a `ResultSet`.
+  def execute(binds : NamedTuple)
+    reset
+    binds.each do |name, bind_value|
+      self[name] = bind_value
     end
     ResultSet.new self
   end
 
   # Executes this statement with the given binds and yields a `ResultSet` that
   # will be closed at the end of the block.
-  def execute(binds : Enumerable | Slice(UInt8), &block)
+  def execute(binds : Enumerable | NamedTuple | Slice(UInt8), &block)
     result_set = execute(binds)
     yield result_set
   ensure
     close
+  end
+
+  def execute(**binds)
+    execute(binds)
+  end
+
+  def execute(**binds, &block)
+    execute(binds) do |rs|
+      yield rs
+    end
   end
 
   # Returns the value of the given column by index (1-based).
@@ -154,6 +172,10 @@ class SQLite3::Statement
     hash.each do |key, value|
       self[key] = value
     end
+  end
+
+  def []=(index : Int, tuple : Tuple(String | Symbol, U))
+    self[tuple[0]] = tuple[1]
   end
 
   # Returns the column names of this statement.

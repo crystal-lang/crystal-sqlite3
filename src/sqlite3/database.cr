@@ -84,6 +84,10 @@ class SQLite3::Database
     execute(sql, binds)
   end
 
+  def execute(sql, **binds)
+    execute(sql, binds)
+  end
+
   # Executes the given SQL statement. If additional parameters are given, they are treated as bind variables,
   # and are bound to the placeholders in the query.
   #
@@ -97,6 +101,12 @@ class SQLite3::Database
     end
   end
 
+  def execute(sql, **binds, &block)
+    execute(sql, binds) do |row|
+      yield row
+    end
+  end
+
   # Executes the given SQL statement. If additional parameters are given, they are treated as bind variables,
   # and are bound to the placeholders in the query.
   #
@@ -104,7 +114,7 @@ class SQLite3::Database
   # with the key being used as the name of the placeholder to bind the value to.
   #
   # Returns an `Array(Array(Value))`.
-  def execute(sql, binds : Enumerable)
+  def execute(sql, binds : Enumerable | NamedTuple)
     rows = [] of Array(Value)
     execute(sql, binds) do |row|
       rows << row
@@ -119,7 +129,7 @@ class SQLite3::Database
   # with the key being used as the name of the placeholder to bind the value to.
   #
   # Yields one `Array(Value)` for each result.
-  def execute(sql, binds : Enumerable, &block)
+  def execute(sql, binds : Enumerable | NamedTuple, &block)
     query(sql, binds) do |result_set|
       while result_set.next
         yield result_set.to_a
@@ -149,7 +159,7 @@ class SQLite3::Database
   end
 
   # A convenience method that returns the first value of the first row of a query result.
-  def get_first_value(sql, binds : Enumerable)
+  def get_first_value(sql, binds : Enumerable | NamedTuple)
     query(sql, binds) do |result_set|
       if result_set.next
         return result_set[0]
@@ -172,14 +182,24 @@ class SQLite3::Database
   end
 
   # Executes a query and gives back a `ResultSet`.
-  def query(sql, binds : Enumerable)
+  def query(sql, binds : Enumerable | NamedTuple)
     prepare(sql).execute(binds)
   end
 
   # Executes a query and yields a `ResultSet` that will be closed at the end of the given block.
-  def query(sql, binds : Enumerable, &block)
+  def query(sql, binds : Enumerable | NamedTuple, &block)
     prepare(sql).execute(binds) do |result_set|
       yield result_set
+    end
+  end
+
+  def query(sql, **binds)
+    query(sql, binds)
+  end
+
+  def query(sql, **binds, &block)
+    query(sql, binds) do |rs|
+      yield rs
     end
   end
 
