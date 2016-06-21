@@ -17,7 +17,7 @@ class SQLite3::Statement < DB::Statement
     rs.move_next
     rs.close
 
-    rows_affected = LibSQLite3.changes(connection)
+    rows_affected = LibSQLite3.changes(connection).to_i64
     last_id = LibSQLite3.last_insert_rowid(connection)
 
     DB::ExecResult.new rows_affected, last_id
