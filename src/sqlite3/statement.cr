@@ -4,7 +4,7 @@ class SQLite3::Statement < DB::Statement
     check LibSQLite3.prepare_v2(@connection, sql, sql.bytesize + 1, out @stmt, nil)
   end
 
-  protected def perform_query(args : Slice(DB::Any))
+  protected def perform_query(args : Enumerable) : DB::ResultSet
     LibSQLite3.reset(self)
     args.each_with_index(1) do |arg, index|
       bind_arg(index, arg)
@@ -12,7 +12,7 @@ class SQLite3::Statement < DB::Statement
     ResultSet.new(self)
   end
 
-  protected def perform_exec(args : Slice(DB::Any))
+  protected def perform_exec(args : Enumerable) : DB::ExecResult
     rs = perform_query(args)
     rs.move_next
     rs.close
