@@ -76,12 +76,20 @@ describe Database do
     cell.to_a.should eq([0x53, 0x51, 0x4C, 0x69, 0x74, 0x65])
   end
 
-  it "executes with named bind using symbol" do
+  it "executes with named bind using tuple with symbol" do
     with_db(&.execute(%(select :value), {value: "hello"})).should eq([["hello"]])
   end
 
-  it "executes with named bind using string" do
+  it "executes with named bind using tuple with string" do
     with_db(&.execute(%(select :value), {"value": "hello"})).should eq([["hello"]])
+  end
+
+  it "executes with named bind using hash with symbol" do
+    with_db(&.execute(%(select :value), {:value => "hello"})).should eq([["hello"]])
+  end
+
+  it "executes with named bind using hash with string" do
+    with_db(&.execute(%(select :value), {"value" => "hello"})).should eq([["hello"]])
   end
 
   it "executes with bind blob" do

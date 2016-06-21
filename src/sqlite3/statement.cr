@@ -156,6 +156,18 @@ class SQLite3::Statement
     end
   end
 
+  # Binds a named tuple to this statement (the `index` is ignored).
+  def []=(index : Int, tuple : NamedTuple)
+    tuple.each do |key, value|
+      self[key] = value
+    end
+  end
+
+  # Hash each with index returns a tuple (the `index` is ignored).
+  def []=(index : Int, tuple : Tuple)
+    self[tuple[0]] = tuple[1]
+  end
+
   # Returns the column names of this statement.
   def columns
     Array.new(column_count) { |i| column_name(i) }
