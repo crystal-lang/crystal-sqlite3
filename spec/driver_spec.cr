@@ -25,6 +25,7 @@ def sqlite_type_for(v)
   when String          ; "text"
   when Int32, Int64    ; "int"
   when Float32, Float64; "float"
+  when Time            ; "text"
   else
     raise "not implemented for #{typeof(v)}"
   end
@@ -197,6 +198,24 @@ describe Driver do
 
       slice = db.scalar("select cast(col1 as blob) from table1").as(Bytes)
       slice.to_a.should eq(ary)
+    end
+  end
+
+  it "insert/get value date from table" do
+    with_db do |db|
+      value = Time.new(2016, 7, 22, 15, 0, 0, 0)
+      db.exec "create table table1 (col1 #{sqlite_type_for(value)})"
+      db.exec %(insert into table1 values (?)), value
+
+      db.query "select col1 from table1" do |rs|
+        rs.move_next
+        rs.read(Time).should eq(value)
+      end
+
+      db.query "select col1 from table1" do |rs|
+        rs.move_next
+        rs.read?(Time).should eq(value)
+      end
     end
   end
 

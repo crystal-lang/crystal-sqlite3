@@ -22,7 +22,7 @@ class SQLite3::ResultSet < DB::ResultSet
     end
   end
 
-  {% for t in DB::TYPES %}
+  macro nilable_read_for(t)
     def read?(t : {{t}}.class) : {{t}}?
       if read_nil?
         moving_column { nil }
@@ -30,6 +30,10 @@ class SQLite3::ResultSet < DB::ResultSet
         read(t)
       end
     end
+  end
+
+  {% for t in DB::TYPES %}
+    nilable_read_for({{t}})
   {% end %}
 
   def read(t : String.class) : String
@@ -61,6 +65,12 @@ class SQLite3::ResultSet < DB::ResultSet
       Bytes.new(ptr, bytes)
     end
   end
+
+  def read(t : Time.class) : Time
+    Time.parse read(String), SQLite3::DATE_FORMAT
+  end
+
+  nilable_read_for Time
 
   def column_count
     LibSQLite3.column_count(self)

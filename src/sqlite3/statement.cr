@@ -56,6 +56,10 @@ class SQLite3::Statement < DB::Statement
     check LibSQLite3.bind_blob(self, index, value, value.size, nil)
   end
 
+  private def bind_arg(index, value : Time)
+    bind_arg(index, value.to_s(SQLite3::DATE_FORMAT))
+  end
+
   private def bind_arg(index, value)
     raise "#{self.class} does not support #{value.class} params"
   end
