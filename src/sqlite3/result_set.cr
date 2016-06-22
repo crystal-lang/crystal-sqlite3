@@ -52,13 +52,13 @@ class SQLite3::ResultSet < DB::ResultSet
     moving_column { |col| LibSQLite3.column_double(self, col) }
   end
 
-  def read(t : Slice(UInt8).class) : Slice(UInt8)
+  def read(t : Bytes.class) : Bytes
     moving_column do |col|
       blob = LibSQLite3.column_blob(self, col)
       bytes = LibSQLite3.column_bytes(self, col)
       ptr = Pointer(UInt8).malloc(bytes)
       ptr.copy_from(blob, bytes)
-      Slice(UInt8).new(ptr, bytes)
+      Bytes.new(ptr, bytes)
     end
   end
 
@@ -74,7 +74,7 @@ class SQLite3::ResultSet < DB::ResultSet
     case LibSQLite3.column_type(self, index)
     when Type::INTEGER; Int64
     when Type::FLOAT  ; Float64
-    when Type::BLOB   ; Slice(UInt8)
+    when Type::BLOB   ; Bytes
     when Type::TEXT   ; String
     when Type::NULL   ; Nil
     else
