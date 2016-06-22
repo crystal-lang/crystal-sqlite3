@@ -46,6 +46,9 @@ def assert_filename(uri, filename)
   SQLite3::Connection.filename(URI.parse(uri)).should eq(filename)
 end
 
+class NotSupportedType
+end
+
 describe Driver do
   it "should register sqlite3 name" do
     DB.driver_class("sqlite3").should eq(SQLite3::Driver)
@@ -111,7 +114,7 @@ describe Driver do
 
   it "executes and selects blob" do
     with_db do |db|
-      slice = db.scalar(%(select X'53514C697465')) as Slice(UInt8)
+      slice = db.scalar(%(select X'53514C697465')).as(Slice(UInt8))
       slice.to_a.should eq([0x53, 0x51, 0x4C, 0x69, 0x74, 0x65])
     end
   end
@@ -119,7 +122,7 @@ describe Driver do
   it "executes with bind blob" do
     with_db do |db|
       ary = UInt8[0x53, 0x51, 0x4C, 0x69, 0x74, 0x65]
-      slice = db.scalar(%(select cast(? as BLOB)), Slice.new(ary.to_unsafe, ary.size)) as Slice(UInt8)
+      slice = db.scalar(%(select cast(? as BLOB)), Slice.new(ary.to_unsafe, ary.size)).as(Slice(UInt8))
       slice.to_a.should eq(ary)
     end
   end
@@ -192,8 +195,23 @@ describe Driver do
       db.exec "create table table1 (col1 blob)"
       db.exec %(insert into table1 values (?)), Slice.new(ary.to_unsafe, ary.size)
 
-      slice = db.scalar("select cast(col1 as blob) from table1") as Slice(UInt8)
+      slice = db.scalar("select cast(col1 as blob) from table1").as(Slice(UInt8))
       slice.to_a.should eq(ary)
+    end
+  end
+
+  it "raises on unsupported param types" do
+    with_db do |db|
+      expect_raises Exception, "SQLite3::Statement does not support NotSupportedType params" do
+        db.query "select 1", NotSupportedType.new
+      end
+      # TODO raising exception does not close the connection and pool is exhausted
+    end
+
+    with_db do |db|
+      expect_raises Exception, "SQLite3::Statement does not support NotSupportedType params" do
+        db.exec "select 1", NotSupportedType.new
+      end
     end
   end
 

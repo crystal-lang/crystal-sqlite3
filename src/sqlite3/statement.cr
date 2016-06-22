@@ -56,6 +56,10 @@ class SQLite3::Statement < DB::Statement
     check LibSQLite3.bind_blob(self, index, value, value.size, nil)
   end
 
+  private def bind_arg(index, value)
+    raise "#{self.class} does not support #{value.class} params"
+  end
+
   private def check(code)
     raise Exception.new(@connection) unless code == 0
   end
