@@ -88,7 +88,7 @@ class SQLite3::ResultSet < DB::ResultSet
     when Type::TEXT   ; String
     when Type::NULL   ; Nil
     else
-      raise "not implemented"
+      raise Exception.new(@statement.connection)
     end
   end
 

@@ -1,17 +1,5 @@
 require "./spec_helper"
 
-DB_FILENAME = "./test.db"
-
-def with_db(&block : DB::Database ->)
-  DB.open "sqlite3:#{DB_FILENAME}", &block
-ensure
-  File.delete(DB_FILENAME)
-end
-
-def with_mem_db(&block : DB::Database ->)
-  DB.open "sqlite3://%3Amemory%3A", &block
-end
-
 def sql(s : String)
   "#{s.inspect}"
 end
