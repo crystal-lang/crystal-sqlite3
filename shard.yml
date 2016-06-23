@@ -4,7 +4,6 @@ version: 0.1.0
 dependencies:
   db:
     github: bcardiff/crystal-db
-    branch: feature/5-type-extensibility
 
 authors:
   - Ary Borenszweig <aborenszweig@manas.com.ar>
