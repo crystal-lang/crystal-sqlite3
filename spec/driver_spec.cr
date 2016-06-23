@@ -25,6 +25,7 @@ def sqlite_type_for(v)
   when String          ; "text"
   when Int32, Int64    ; "int"
   when Float32, Float64; "float"
+  when Time            ; "text"
   else
     raise "not implemented for #{typeof(v)}"
   end
@@ -44,6 +45,9 @@ end
 
 def assert_filename(uri, filename)
   SQLite3::Connection.filename(URI.parse(uri)).should eq(filename)
+end
+
+class NotSupportedType
 end
 
 describe Driver do
@@ -111,7 +115,7 @@ describe Driver do
 
   it "executes and selects blob" do
     with_db do |db|
-      slice = db.scalar(%(select X'53514C697465')) as Slice(UInt8)
+      slice = db.scalar(%(select X'53514C697465')).as(Bytes)
       slice.to_a.should eq([0x53, 0x51, 0x4C, 0x69, 0x74, 0x65])
     end
   end
@@ -119,7 +123,7 @@ describe Driver do
   it "executes with bind blob" do
     with_db do |db|
       ary = UInt8[0x53, 0x51, 0x4C, 0x69, 0x74, 0x65]
-      slice = db.scalar(%(select cast(? as BLOB)), Slice.new(ary.to_unsafe, ary.size)) as Slice(UInt8)
+      slice = db.scalar(%(select cast(? as BLOB)), Bytes.new(ary.to_unsafe, ary.size)).as(Bytes)
       slice.to_a.should eq(ary)
     end
   end
@@ -158,7 +162,7 @@ describe Driver do
         rs.column_type(0).should eq(String)
         rs.column_type(1).should eq(Int64)
         rs.column_type(2).should eq(Float64)
-        rs.column_type(3).should eq(Slice(UInt8))
+        rs.column_type(3).should eq(Bytes)
       end
     end
   end
@@ -190,10 +194,43 @@ describe Driver do
       ary = UInt8[0x53, 0x51, 0x4C, 0x69, 0x74, 0x65]
 
       db.exec "create table table1 (col1 blob)"
-      db.exec %(insert into table1 values (?)), Slice.new(ary.to_unsafe, ary.size)
+      db.exec %(insert into table1 values (?)), Bytes.new(ary.to_unsafe, ary.size)
 
-      slice = db.scalar("select cast(col1 as blob) from table1") as Slice(UInt8)
+      slice = db.scalar("select cast(col1 as blob) from table1").as(Bytes)
       slice.to_a.should eq(ary)
+    end
+  end
+
+  it "insert/get value date from table" do
+    with_db do |db|
+      value = Time.new(2016, 7, 22, 15, 0, 0, 0)
+      db.exec "create table table1 (col1 #{sqlite_type_for(value)})"
+      db.exec %(insert into table1 values (?)), value
+
+      db.query "select col1 from table1" do |rs|
+        rs.move_next
+        rs.read(Time).should eq(value)
+      end
+
+      db.query "select col1 from table1" do |rs|
+        rs.move_next
+        rs.read?(Time).should eq(value)
+      end
+    end
+  end
+
+  it "raises on unsupported param types" do
+    with_db do |db|
+      expect_raises Exception, "SQLite3::Statement does not support NotSupportedType params" do
+        db.query "select 1", NotSupportedType.new
+      end
+      # TODO raising exception does not close the connection and pool is exhausted
+    end
+
+    with_db do |db|
+      expect_raises Exception, "SQLite3::Statement does not support NotSupportedType params" do
+        db.exec "select 1", NotSupportedType.new
+      end
     end
   end
 

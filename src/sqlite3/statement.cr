@@ -4,7 +4,7 @@ class SQLite3::Statement < DB::Statement
     check LibSQLite3.prepare_v2(@connection, sql, sql.bytesize + 1, out @stmt, nil)
   end
 
-  protected def perform_query(args : Slice(DB::Any))
+  protected def perform_query(args : Enumerable) : DB::ResultSet
     LibSQLite3.reset(self)
     args.each_with_index(1) do |arg, index|
       bind_arg(index, arg)
@@ -12,12 +12,12 @@ class SQLite3::Statement < DB::Statement
     ResultSet.new(self)
   end
 
-  protected def perform_exec(args : Slice(DB::Any))
+  protected def perform_exec(args : Enumerable) : DB::ExecResult
     rs = perform_query(args)
     rs.move_next
     rs.close
 
-    rows_affected = LibSQLite3.changes(connection)
+    rows_affected = LibSQLite3.changes(connection).to_i64
     last_id = LibSQLite3.last_insert_rowid(connection)
 
     DB::ExecResult.new rows_affected, last_id
@@ -52,8 +52,16 @@ class SQLite3::Statement < DB::Statement
     check LibSQLite3.bind_text(self, index, value, value.bytesize, nil)
   end
 
-  private def bind_arg(index, value : Slice(UInt8))
+  private def bind_arg(index, value : Bytes)
     check LibSQLite3.bind_blob(self, index, value, value.size, nil)
+  end
+
+  private def bind_arg(index, value : Time)
+    bind_arg(index, value.to_s(SQLite3::DATE_FORMAT))
+  end
+
+  private def bind_arg(index, value)
+    raise "#{self.class} does not support #{value.class} params"
   end
 
   private def check(code)
