@@ -8,3 +8,5 @@ dependencies:
 authors:
   - Ary Borenszweig <aborenszweig@manas.com.ar>
   - Brian J. Cardiff <bcardiff@manas.com.ar>
+
+license: MIT
