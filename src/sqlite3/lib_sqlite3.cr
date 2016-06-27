@@ -45,6 +45,7 @@ lib LibSQLite3
   fun reset = sqlite3_reset(stmt : Statement) : Int32
   fun column_name = sqlite3_column_name(stmt : Statement, idx : Int32) : UInt8*
   fun last_insert_rowid = sqlite3_last_insert_rowid(db : SQLite3) : Int64
+  fun changes = sqlite3_changes(db : SQLite3) : Int32
 
   fun finalize = sqlite3_finalize(stmt : Statement) : Int32
   fun close_v2 = sqlite3_close_v2(SQLite3) : Int32

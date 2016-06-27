@@ -1,239 +1,74 @@
-# A statement represents a prepared-but-unexecuted SQL query.
-class SQLite3::Statement
-  getter db
-
-  # :nodoc:
-  def initialize(@db : Database, sql : String)
-    check LibSQLite3.prepare_v2(@db, sql, sql.bytesize + 1, out @stmt, nil)
-    @closed = false
+class SQLite3::Statement < DB::Statement
+  def initialize(connection, sql)
+    super(connection)
+    check LibSQLite3.prepare_v2(@connection, sql, sql.bytesize + 1, out @stmt, nil)
   end
 
-  # :nodoc:
-  def self.new(db, sql)
-    statement = new db, sql
-    begin
-      yield statement
-    ensure
-      statement.close
-    end
-  end
-
-  # :nodoc:
-  def step
-    LibSQLite3::Code.new LibSQLite3.step(self)
-  end
-
-  # Returns the number of columns in this statement.
-  def column_count
-    LibSQLite3.column_count(self)
-  end
-
-  # Returns the `Type` of the column at the given index.
-  def column_type(index : Int)
-    LibSQLite3.column_type(self, index)
-  end
-
-  # Returns the name of the column at the given index.
-  def column_name(index)
-    String.new LibSQLite3.column_name(self, index)
-  end
-
-  # Executes this statement with the given binds and returns a `ResultSet`.
-  def execute(*binds)
-    execute binds
-  end
-
-  # Executes this statement with the given binds and yields a `ResultSet` that
-  # will be closed at the end of the block.
-  def execute(*binds)
-    execute(binds) do |row|
-      yield row
-    end
-  end
-
-  # Executes this statement with a single BLOB bind and returns a `ResultSet`.
-  def execute(binds : Slice(UInt8))
-    reset
-    self[1] = binds
-    ResultSet.new self
-  end
-
-  # Executes this statement with the given binds and returns a `ResultSet`.
-  def execute(binds : Enumerable)
-    reset
-    binds.each_with_index(1) do |bind_value, index|
-      self[index] = bind_value
-    end
-    ResultSet.new self
-  end
-
-  # Executes this statement with the given binds and returns a `ResultSet`.
-  def execute(binds : NamedTuple)
-    reset
-    binds.each do |name, bind_value|
-      self[name] = bind_value
-    end
-    ResultSet.new self
-  end
-
-  # Executes this statement with the given binds and yields a `ResultSet` that
-  # will be closed at the end of the block.
-  def execute(binds : Enumerable | NamedTuple | Slice(UInt8), &block)
-    result_set = execute(binds)
-    yield result_set
-  ensure
-    close
-  end
-
-  def execute(**binds)
-    execute(binds)
-  end
-
-  def execute(**binds, &block)
-    execute(binds) do |rs|
-      yield rs
-    end
-  end
-
-  # Returns the value of the given column by index (1-based).
-  def [](index : Int)
-    case type = column_type(index)
-    when Type::INTEGER
-      column_int64(index)
-    when Type::FLOAT
-      column_double(index)
-    when Type::TEXT
-      String.new(column_text(index))
-    when Type::BLOB
-      blob = column_blob(index)
-      bytes = column_bytes(index)
-      ptr = Pointer(UInt8).malloc(bytes)
-      ptr.copy_from(blob, bytes)
-      Slice.new(ptr, bytes)
-    when Type::NULL
-      nil
-    else
-      raise "Unknown column type: #{type}"
-    end
-  end
-
-  # Returns the value of the given column by name.
-  def [](name : String)
-    column_count.times do |i|
-      if column_name(i) == name
-        return self[i]
-      end
-    end
-    raise "Unknown column: #{name}"
-  end
-
-  # Binds the parameter at the given index to an Int.
-  def []=(index : Int, value : Nil)
-    check LibSQLite3.bind_null(self, index)
-  end
-
-  # Binds the parameter at the given index to an Int32.
-  def []=(index : Int, value : Int32)
-    check LibSQLite3.bind_int(self, index, value)
-  end
-
-  # Binds the parameter at the given index to an Int64.
-  def []=(index : Int, value : Int64)
-    check LibSQLite3.bind_int64(self, index, value)
-  end
-
-  # Binds the parameter at the given index to a Float.
-  def []=(index : Int, value : Float)
-    check LibSQLite3.bind_double(self, index, value.to_f64)
-  end
-
-  # Binds the parameter at the given index to a String.
-  def []=(index : Int, value : String)
-    check LibSQLite3.bind_text(self, index, value, value.bytesize, nil)
-  end
-
-  # Binds the parameter at the given index to a BLOB.
-  def []=(index : Int, value : Slice(UInt8))
-    check LibSQLite3.bind_blob(self, index, value, value.size, nil)
-  end
-
-  # Binds a named parameter, using the `:AAAA` naming scheme for parameters.
-  def []=(name : String | Symbol, value)
-    converted_name = ":#{name}"
-    index = LibSQLite3.bind_parameter_index(self, converted_name)
-    if index == 0
-      raise "Unknown parameter: #{name}"
-    end
-    self[index] = value
-  end
-
-  # Binds a hash to this statement (the `index` is ignored).
-  def []=(index : Int, hash : Hash)
-    hash.each do |key, value|
-      self[key] = value
-    end
-  end
-
-  def []=(index : Int, tuple : Tuple(String | Symbol, U))
-    self[tuple[0]] = tuple[1]
-  end
-
-  # Returns the column names of this statement.
-  def columns
-    Array.new(column_count) { |i| column_name(i) }
-  end
-
-  # Returns an `Array(Type)` of this statement's columns. Note that the statement
-  # must be executed in order for this to return sensible values, otherwise all types
-  # will be NULL.
-  def types
-    Array.new(column_count) { |i| column_type(i) }
-  end
-
-  # Reset this statment, allowing to re-execute it with new binds.
-  def reset
+  protected def perform_query(args : Enumerable) : DB::ResultSet
     LibSQLite3.reset(self)
+    args.each_with_index(1) do |arg, index|
+      bind_arg(index, arg)
+    end
+    ResultSet.new(self)
   end
 
-  # Closes this statement.
-  def close
-    raise "Statement already closed" if @closed
-    @closed = true
+  protected def perform_exec(args : Enumerable) : DB::ExecResult
+    rs = perform_query(args)
+    rs.move_next
+    rs.close
 
+    rows_affected = LibSQLite3.changes(connection).to_i64
+    last_id = LibSQLite3.last_insert_rowid(connection)
+
+    DB::ExecResult.new rows_affected, last_id
+  end
+
+  protected def on_close
+    super
     check LibSQLite3.finalize(self)
   end
 
-  # Returns `true` if this statement is closed. See `#close`.
-  def closed?
-    @closed
+  private def bind_arg(index, value : Nil)
+    check LibSQLite3.bind_null(self, index)
   end
 
-  # :nodoc:
-  def to_unsafe
-    @stmt
+  private def bind_arg(index, value : Int32)
+    check LibSQLite3.bind_int(self, index, value)
   end
 
-  private def column_int64(index)
-    LibSQLite3.column_int64(self, index)
+  private def bind_arg(index, value : Int64)
+    check LibSQLite3.bind_int64(self, index, value)
   end
 
-  private def column_double(index)
-    LibSQLite3.column_double(self, index)
+  private def bind_arg(index, value : Float32)
+    check LibSQLite3.bind_double(self, index, value.to_f64)
   end
 
-  private def column_text(index)
-    LibSQLite3.column_text(self, index)
+  private def bind_arg(index, value : Float64)
+    check LibSQLite3.bind_double(self, index, value)
   end
 
-  private def column_blob(index)
-    LibSQLite3.column_blob(self, index)
+  private def bind_arg(index, value : String)
+    check LibSQLite3.bind_text(self, index, value, value.bytesize, nil)
   end
 
-  private def column_bytes(index)
-    LibSQLite3.column_bytes(self, index)
+  private def bind_arg(index, value : Bytes)
+    check LibSQLite3.bind_blob(self, index, value, value.size, nil)
+  end
+
+  private def bind_arg(index, value : Time)
+    bind_arg(index, value.to_s(SQLite3::DATE_FORMAT))
+  end
+
+  private def bind_arg(index, value)
+    raise "#{self.class} does not support #{value.class} params"
   end
 
   private def check(code)
-    raise Exception.new(@db) unless code == 0
+    raise Exception.new(@connection) unless code == 0
+  end
+
+  def to_unsafe
+    @stmt
   end
 end

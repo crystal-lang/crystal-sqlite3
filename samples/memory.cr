@@ -1,26 +1,7 @@
-# crystal-sqlite3 [![Build Status](https://travis-ci.org/manastech/crystal-sqlite3.svg?branch=master)](https://travis-ci.org/manastech/crystal-sqlite3)
-
-SQLite3 bindings for [Crystal](http://crystal-lang.org/).
-
-**This is a work in progress.**
-
-[Documentation](http://manastech.github.io/crystal-sqlite3/)
-
-### shard.yml
-
-```yml
-dependencies:
-  sqlite3:
-    github: manastech/crystal-sqlite3
-```
-
-### Usage
-
-```crystal
 require "db"
-require "sqlite3"
+require "../src/sqlite3"
 
-DB.open "sqlite3://./data.db" do |db|
+DB.open "sqlite3://%3Amemory%3A" do |db|
   db.exec "create table contacts (name string, age integer)"
   db.exec "insert into contacts values (?, ?)", "John Doe", 30
 
@@ -43,4 +24,3 @@ DB.open "sqlite3://./data.db" do |db|
     end
   end
 end
-```

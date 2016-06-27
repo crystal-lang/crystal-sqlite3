@@ -1,71 +1,117 @@
-# The ResultSet object encapsulates the enumerability of a query’s output.
-# It is a simple cursor over the data that the query returns.
-#
-# Typical usage is:
-#
-# ```
-# require "sqlite3"
-#
-# db = SQLite3::Database.new("foo.db")
-# stmt = db.prepare("select * from person")
-# result_set = stmt.execute
-# while result_set.next
-#   p result_set.to_a
-# end
-# stmt.close
-# db.close
-# ```
-class SQLite3::ResultSet
-  # :nodoc:
-  def initialize(@statement : Statement)
-  end
+class SQLite3::ResultSet < DB::ResultSet
+  @column_index = 0
 
-  # Returns the number of columns.
-  def column_count
-    @statement.column_count
-  end
-
-  # Returns the value of a column by index or name.
-  def [](index_or_name)
-    @statement[index_or_name]
-  end
-
-  # Returns the types of the columns, an `Array(Type)`.
-  def types
-    @statement.types
-  end
-
-  # Returns the names of the columns, an `Array(String)`.
-  def columns
-    @statement.columns
+  protected def do_close
+    super
+    LibSQLite3.reset(self)
   end
 
   # Advances to the next row. Returns `true` if there's a next row,
   # `false` otherwise. Must be called at least once to advance to the first
   # row.
-  def next
-    case @statement.step
+  def move_next
+    @column_index = 0
+
+    case step
     when LibSQLite3::Code::ROW
       true
     when LibSQLite3::Code::DONE
       false
     else
-      raise Exception.new(@statement.db)
+      raise Exception.new(@statement.connection)
     end
   end
 
-  # Closes this result set, closing the associated statement.
-  def close
-    @statement.close
+  macro nilable_read_for(t)
+    def read?(t : {{t}}.class) : {{t}}?
+      if read_nil?
+        moving_column { nil }
+      else
+        read(t)
+      end
+    end
   end
 
-  # Returns `true` if the associated statement is closed.
-  def closed?
-    @statement.closed?
+  {% for t in DB::TYPES %}
+    nilable_read_for({{t}})
+  {% end %}
+
+  def read(t : String.class) : String
+    moving_column { |col| String.new(LibSQLite3.column_text(self, col)) }
   end
 
-  # Return the current row's value as an `Array(Value)`.
-  def to_a
-    Array(Value).new(column_count) { |i| self[i] }
+  def read(t : Int32.class) : Int32
+    read(Int64).to_i32
+  end
+
+  def read(t : Int64.class) : Int64
+    moving_column { |col| LibSQLite3.column_int64(self, col) }
+  end
+
+  def read(t : Float32.class) : Float32
+    read(Float64).to_f32
+  end
+
+  def read(t : Float64.class) : Float64
+    moving_column { |col| LibSQLite3.column_double(self, col) }
+  end
+
+  def read(t : Bytes.class) : Bytes
+    moving_column do |col|
+      blob = LibSQLite3.column_blob(self, col)
+      bytes = LibSQLite3.column_bytes(self, col)
+      ptr = Pointer(UInt8).malloc(bytes)
+      ptr.copy_from(blob, bytes)
+      Bytes.new(ptr, bytes)
+    end
+  end
+
+  def read(t : Time.class) : Time
+    Time.parse read(String), SQLite3::DATE_FORMAT
+  end
+
+  nilable_read_for Time
+
+  def column_count
+    LibSQLite3.column_count(self)
+  end
+
+  def column_name(index)
+    String.new LibSQLite3.column_name(self, index)
+  end
+
+  def column_type(index : Int32)
+    case LibSQLite3.column_type(self, index)
+    when Type::INTEGER; Int64
+    when Type::FLOAT  ; Float64
+    when Type::BLOB   ; Bytes
+    when Type::TEXT   ; String
+    when Type::NULL   ; Nil
+    else
+      raise Exception.new(@statement.connection)
+    end
+  end
+
+  def to_unsafe
+    @statement.to_unsafe
+  end
+
+  private def read_nil?
+    column_sqlite_type == Type::NULL
+  end
+
+  private def column_sqlite_type
+    LibSQLite3.column_type(self, @column_index)
+  end
+
+  # :nodoc:
+  private def step
+    LibSQLite3::Code.new LibSQLite3.step(@statement)
+  end
+
+  private def moving_column
+    res = yield @column_index
+    @column_index += 1
+    res
   end
 end
