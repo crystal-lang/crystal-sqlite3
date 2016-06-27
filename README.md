@@ -1,4 +1,4 @@
-# crystal-sqlite3 [![Build Status](https://travis-ci.org/manastech/crystal-sqlite3.svg?branch=master)](https://travis-ci.org/manastech/crystal-sqlite3)
+# crystal-sqlite3 [![Build Status](https://travis-ci.org/crystal-lang/crystal-sqlite3.svg?branch=master)](https://travis-ci.org/crystal-lang/crystal-sqlite3)
 
 SQLite3 bindings for [Crystal](http://crystal-lang.org/).
 
@@ -11,7 +11,7 @@ Add this to your application's `shard.yml`:
 ```yml
 dependencies:
   sqlite3:
-    github: manastech/crystal-sqlite3
+    github: crystal-lang/crystal-sqlite3
 ```
 
 ### Usage
