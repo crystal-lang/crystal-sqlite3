@@ -2,11 +2,11 @@
 
 SQLite3 bindings for [Crystal](http://crystal-lang.org/).
 
-**This is a work in progress.**
+Check [crystal-db](https://github.com/crystal-lang/crystal-db) for general db driver documentation. crystal-sqlite3 driver is registered under `sqlite3://` uri.
 
-[Documentation](http://manastech.github.io/crystal-sqlite3/)
+## Installation
 
-### shard.yml
+Add this to your application's `shard.yml`:
 
 ```yml
 dependencies:
@@ -17,7 +17,6 @@ dependencies:
 ### Usage
 
 ```crystal
-require "db"
 require "sqlite3"
 
 DB.open "sqlite3://./data.db" do |db|
