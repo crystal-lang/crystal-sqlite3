@@ -25,12 +25,6 @@ def assert_single_read(rs, value_type, value)
   rs.move_next.should be_false
 end
 
-def assert_single_read?(rs, value_type, value)
-  rs.move_next.should be_true
-  rs.read?(value_type).should eq(value)
-  rs.move_next.should be_false
-end
-
 def assert_filename(uri, filename)
   SQLite3::Connection.filename(URI.parse(uri)).should eq(filename)
 end
@@ -77,7 +71,7 @@ describe Driver do
         db.scalar("select null").should be_nil
 
         db.query "select null" do |rs|
-          assert_single_read? rs, typeof({{value}}), nil
+          assert_single_read rs, typeof({{value}} || nil), nil
         end
       end
     end
@@ -137,24 +131,6 @@ describe Driver do
     end
   end
 
-  it "gets column types" do
-    with_mem_db do |db|
-      db.exec "create table table1 (aText text, anInteger integer, aReal real, aBlob blob)"
-      db.exec "insert into table1 (aText, anInteger, aReal, aBlob) values ('a', 1, 1.5, X'53')"
-
-      # sqlite is unable to get column_type information
-      # from the query itself without executing and getting
-      # actual data.
-      db.query "select * from table1" do |rs|
-        rs.move_next
-        rs.column_type(0).should eq(String)
-        rs.column_type(1).should eq(Int64)
-        rs.column_type(2).should eq(Float64)
-        rs.column_type(3).should eq(Bytes)
-      end
-    end
-  end
-
   it "gets last insert row id" do
     with_mem_db do |db|
       db.exec "create table person (name string, age integer)"
@@ -198,11 +174,6 @@ describe Driver do
       db.query "select col1 from table1" do |rs|
         rs.move_next
         rs.read(Time).should eq(value)
-      end
-
-      db.query "select col1 from table1" do |rs|
-        rs.move_next
-        rs.read?(Time).should eq(value)
       end
     end
   end
