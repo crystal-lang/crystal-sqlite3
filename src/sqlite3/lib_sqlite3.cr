@@ -15,7 +15,7 @@ lib LibSQLite3
   alias Callback = (Void*, Int32, UInt8**, UInt8**) -> Int32
 
   fun open = sqlite3_open_v2(filename : UInt8*, db : SQLite3*) : Int32
-  fun open_v2 = sqlite3_open_v2(filename : UInt8*, db : SQLite3*, flags : SQLite3::Flag, zVfs : UInt8*) : Int32
+  fun open_v2 = sqlite3_open_v2(filename : UInt8*, db : SQLite3*, flags : ::SQLite3::Flag, zVfs : UInt8*) : Int32
 
   fun errcode = sqlite3_errcode(SQLite3) : Int32
   fun errmsg = sqlite3_errmsg(SQLite3) : UInt8*
@@ -27,7 +27,7 @@ lib LibSQLite3
   fun prepare_v2 = sqlite3_prepare_v2(db : SQLite3, zSql : UInt8*, nByte : Int32, ppStmt : Statement*, pzTail : UInt8**) : Int32
   fun step = sqlite3_step(stmt : Statement) : Int32
   fun column_count = sqlite3_column_count(stmt : Statement) : Int32
-  fun column_type = sqlite3_column_type(stmt : Statement, iCol : Int32) : SQLite3::Type
+  fun column_type = sqlite3_column_type(stmt : Statement, iCol : Int32) : ::SQLite3::Type
   fun column_int64 = sqlite3_column_int64(stmt : Statement, iCol : Int32) : Int64
   fun column_double = sqlite3_column_double(stmt : Statement, iCol : Int32) : Float64
   fun column_text = sqlite3_column_text(stmt : Statement, iCol : Int32) : UInt8*
