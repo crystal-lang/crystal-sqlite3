@@ -18,7 +18,7 @@ class SQLite3::ResultSet < DB::ResultSet
     when LibSQLite3::Code::DONE
       false
     else
-      raise Exception.new(@statement.connection)
+      raise Exception.new(sqlite3_statement.sqlite3_connection)
     end
   end
 
@@ -41,7 +41,7 @@ class SQLite3::ResultSet < DB::ResultSet
       when Type::NULL
         nil
       else
-        raise Exception.new(@statement.connection)
+        raise Exception.new(sqlite3_statement.sqlite3_connection)
       end
     @column_index += 1
     value
@@ -68,12 +68,16 @@ class SQLite3::ResultSet < DB::ResultSet
   end
 
   def to_unsafe
-    @statement.to_unsafe
+    sqlite3_statement.to_unsafe
   end
 
   # :nodoc:
   private def step
-    LibSQLite3::Code.new LibSQLite3.step(@statement)
+    LibSQLite3::Code.new LibSQLite3.step(sqlite3_statement)
+  end
+
+  protected def sqlite3_statement
+    @statement.as(Statement)
   end
 
   private def moving_column

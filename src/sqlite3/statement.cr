@@ -1,7 +1,7 @@
 class SQLite3::Statement < DB::Statement
   def initialize(connection, sql)
     super(connection)
-    check LibSQLite3.prepare_v2(@connection, sql, sql.bytesize + 1, out @stmt, nil)
+    check LibSQLite3.prepare_v2(sqlite3_connection, sql, sql.bytesize + 1, out @stmt, nil)
   end
 
   protected def perform_query(args : Enumerable) : DB::ResultSet
@@ -17,8 +17,8 @@ class SQLite3::Statement < DB::Statement
     rs.move_next
     rs.close
 
-    rows_affected = LibSQLite3.changes(connection).to_i64
-    last_id = LibSQLite3.last_insert_rowid(connection)
+    rows_affected = LibSQLite3.changes(sqlite3_connection).to_i64
+    last_id = LibSQLite3.last_insert_rowid(sqlite3_connection)
 
     DB::ExecResult.new rows_affected, last_id
   end
@@ -65,7 +65,11 @@ class SQLite3::Statement < DB::Statement
   end
 
   private def check(code)
-    raise Exception.new(@connection) unless code == 0
+    raise Exception.new(sqlite3_connection) unless code == 0
+  end
+
+  protected def sqlite3_connection
+    @connection.as(Connection)
   end
 
   def to_unsafe
