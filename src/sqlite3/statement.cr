@@ -13,9 +13,14 @@ class SQLite3::Statement < DB::Statement
   end
 
   protected def perform_exec(args : Enumerable) : DB::ExecResult
-    rs = perform_query(args)
-    rs.move_next
-    rs.close
+    LibSQLite3.reset(self.to_unsafe)
+    args.each_with_index(1) do |arg, index|
+      bind_arg(index, arg)
+    end
+
+    # exec
+    step = LibSQLite3::Code.new LibSQLite3.step(self)
+    raise Exception.new(sqlite3_connection) unless step == LibSQLite3::Code::DONE
 
     rows_affected = LibSQLite3.changes(sqlite3_connection).to_i64
     last_id = LibSQLite3.last_insert_rowid(sqlite3_connection)
