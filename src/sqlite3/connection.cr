@@ -19,7 +19,6 @@ class SQLite3::Connection < DB::Connection
   end
 
   def do_close
-    @statements_cache.values.each &.close
     super
     LibSQLite3.close_v2(self)
   end
