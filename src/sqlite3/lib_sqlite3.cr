@@ -14,7 +14,6 @@ lib LibSQLite3
 
   alias Callback = (Void*, Int32, UInt8**, UInt8**) -> Int32
 
-  fun open = sqlite3_open_v2(filename : UInt8*, db : SQLite3*) : Int32
   fun open_v2 = sqlite3_open_v2(filename : UInt8*, db : SQLite3*, flags : ::SQLite3::Flag, zVfs : UInt8*) : Int32
 
   fun errcode = sqlite3_errcode(SQLite3) : Int32
