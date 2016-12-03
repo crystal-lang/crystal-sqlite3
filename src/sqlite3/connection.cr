@@ -14,8 +14,18 @@ class SQLite3::Connection < DB::Connection
     end)
   end
 
-  def build_statement(query)
+  def build_prepared_statement(query)
     Statement.new(self, query)
+  end
+
+  def build_unprepared_statement(query)
+    # sqlite3 does not support unprepared statement.
+    # All statements once prepared should be released
+    # when unneeded. Unprepared statement are not aim
+    # to leave state in the connection. Mimicking them
+    # with prepared statement would be wrong with
+    # respect connection resources.
+    raise DB::Error.new("SQLite3 driver does not support unprepared statements")
   end
 
   def do_close
