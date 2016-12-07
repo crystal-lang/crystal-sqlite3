@@ -33,6 +33,36 @@ class SQLite3::Connection < DB::Connection
     LibSQLite3.close_v2(self)
   end
 
+  # :nodoc:
+  def perform_begin_transaction
+    self.prepared.exec "BEGIN"
+  end
+
+  # :nodoc:
+  def perform_commit_transaction
+    self.prepared.exec "COMMIT"
+  end
+
+  # :nodoc:
+  def perform_rollback_transaction
+    self.prepared.exec "ROLLBACK"
+  end
+
+  # :nodoc:
+  def perform_create_savepoint(name)
+    self.prepared.exec "SAVEPOINT #{name}"
+  end
+
+  # :nodoc:
+  def perform_release_savepoint(name)
+    self.prepared.exec "RELEASE SAVEPOINT #{name}"
+  end
+
+  # :nodoc:
+  def perform_rollback_savepoint(name)
+    self.prepared.exec "ROLLBACK TO #{name}"
+  end
+
   # Dump the database to another SQLite3 database. This can be used for backing up a SQLite3 Database
   # to disk or the opposite
   def dump(to : SQLite3::Connection)
