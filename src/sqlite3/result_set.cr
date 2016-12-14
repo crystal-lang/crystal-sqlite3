@@ -59,6 +59,10 @@ class SQLite3::ResultSet < DB::ResultSet
     Time.parse read(String), SQLite3::DATE_FORMAT
   end
 
+  def read(t : Bool.class) : Bool
+    read(Int64) != 0
+  end
+
   def column_count
     LibSQLite3.column_count(self)
   end

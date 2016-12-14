@@ -4,16 +4,20 @@ def sql(s : String)
   "#{s.inspect}"
 end
 
+def sql(s : Bool)
+  "#{s ? 1 : 0}"
+end
+
 def sql(s)
   "#{s}"
 end
 
 def sqlite_type_for(v)
   case v
-  when String          ; "text"
-  when Int32, Int64    ; "int"
-  when Float32, Float64; "float"
-  when Time            ; "text"
+  when String            ; "text"
+  when Bool, Int32, Int64; "int"
+  when Float32, Float64  ; "float"
+  when Time              ; "text"
   else
     raise "not implemented for #{typeof(v)}"
   end
@@ -143,12 +147,20 @@ describe Driver do
     end
   end
 
-  {% for value in [1, 1_i64, "hello", 1.5, 1.5_f32] %}
+  {% for value in [true, false, 1, 1_i64, "hello", 1.5, 1.5_f32] %}
     it "insert/get value {{value.id}} from table" do
       with_db do |db|
         db.exec "create table table1 (col1 #{sqlite_type_for({{value}})})"
         db.exec %(insert into table1 values (#{sql({{value}})}))
-        db.scalar("select col1 from table1").should eq({{value}})
+        db.query_one("select col1 from table1", as: typeof({{value}})).should eq({{value}})
+      end
+    end
+
+    it "insert/get value {{value.id}} using bind" do
+      with_db do |db|
+        db.exec "create table table1 (col1 #{sqlite_type_for({{value}})})"
+        db.exec %(insert into table1 (col1) values (?)), {{value}}
+        db.query_one("select col1 from table1", as: typeof({{value}})).should eq({{value}})
       end
     end
   {% end %}
@@ -170,11 +182,7 @@ describe Driver do
       value = Time.new(2016, 7, 22, 15, 0, 0, 0)
       db.exec "create table table1 (col1 #{sqlite_type_for(value)})"
       db.exec %(insert into table1 values (?)), value
-
-      db.query "select col1 from table1" do |rs|
-        rs.move_next
-        rs.read(Time).should eq(value)
-      end
+      db.query_one("select col1 from table1", as: Time).should eq(value)
     end
   end
 

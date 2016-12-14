@@ -43,3 +43,8 @@ DB.open "sqlite3://./data.db" do |db|
   end
 end
 ```
+
+### DB::Any
+
+* `Time` is implemented as `TEXT` column using `SQLite3::DATE_FORMAT` format.
+* `Bool` is implemented as `INT` column mapping `0`/`1` values.
