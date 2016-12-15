@@ -4,6 +4,8 @@ class SQLite3::Connection < DB::Connection
     filename = self.class.filename(database.uri)
     # TODO maybe enable Flag::URI to parse query string in the uri as additional flags
     check LibSQLite3.open_v2(filename, out @db, (Flag::READWRITE | Flag::CREATE), nil)
+  rescue
+    raise DB::ConnectionRefused.new
   end
 
   def self.filename(uri : URI)
