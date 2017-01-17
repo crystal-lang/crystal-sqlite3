@@ -20,7 +20,7 @@ lib LibSQLite3
   fun errmsg = sqlite3_errmsg(SQLite3) : UInt8*
 
   fun backup_init = sqlite3_backup_init(SQLite3, UInt8*, SQLite3, UInt8*) : SQLite3Backup
-  fun backup_step = sqlite3_backup_step(SQLite3Backup, Int8) : Code
+  fun backup_step = sqlite3_backup_step(SQLite3Backup, Int32) : Code
   fun backup_finish = sqlite3_backup_finish(SQLite3Backup) : Code
 
   fun prepare_v2 = sqlite3_prepare_v2(db : SQLite3, zSql : UInt8*, nByte : Int32, ppStmt : Statement*, pzTail : UInt8**) : Int32

@@ -44,4 +44,17 @@ describe Connection do
       end
     end
   end
+
+  it "opens a database, inserts records (>1024K), and dumps to an in-memory db" do
+    with_db do |db|
+      with_mem_db do |in_memory_db|
+        db.exec "create table person (name string, age integer)"
+        db.transaction do |tx|
+          100_000.times { tx.connection.exec "insert into person values (\"foo\", 10)" }
+        end
+        dump db, in_memory_db
+        in_memory_db.scalar("select count(*) from person").should eq(100_000)
+      end
+    end
+  end
 end
