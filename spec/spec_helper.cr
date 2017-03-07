@@ -12,6 +12,13 @@ ensure
   File.delete(DB_FILENAME)
 end
 
+def with_cnn(&block : DB::Connection ->)
+  File.delete(DB_FILENAME) rescue nil
+  DB.connect "sqlite3:#{DB_FILENAME}", &block
+ensure
+  File.delete(DB_FILENAME)
+end
+
 def with_db(name, &block : DB::Database ->)
   File.delete(name) rescue nil
   DB.open "sqlite3:#{name}", &block

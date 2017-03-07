@@ -57,4 +57,15 @@ describe Connection do
       end
     end
   end
+
+  it "opens a connection without the pool" do
+    with_cnn do |cnn|
+      cnn.should be_a(SQLite3::Connection)
+
+      cnn.exec "create table person (name string, age integer)"
+      cnn.exec "insert into person values (\"foo\", 10)"
+
+      cnn.scalar("select count(*) from person").should eq(1)
+    end
+  end
 end
