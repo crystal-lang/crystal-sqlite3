@@ -1,5 +1,5 @@
 name: sqlite3
-version: 0.8.1
+version: 0.8.2
 
 dependencies:
   db:
@@ -7,7 +7,7 @@ dependencies:
     version: ~> 0.4.0
 
 authors:
-  - Ary Borenszweig <aborenszweig@manas.com.ar>
-  - Brian J. Cardiff <bcardiff@manas.com.ar>
+  - Ary Borenszweig <aborenszweig@manas.tech>
+  - Brian J. Cardiff <bcardiff@manas.tech>
 
 license: MIT
