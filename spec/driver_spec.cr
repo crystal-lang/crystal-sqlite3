@@ -186,6 +186,17 @@ describe Driver do
     end
   end
 
+  it "insert/get value date from table using DB::ResultSet" do
+    with_db do |db|
+      value = Time.new(2016, 7, 22, 15, 0, 0, 0)
+      db.exec "create table table1 (col1 #{sqlite_type_for(value)})"
+      db.exec %(insert into table1 values (?)), value
+      rs = db.query("select col1 from table1").as(DB::ResultSet)
+      rs.move_next
+      rs.read(Time).should eq(value)
+    end
+  end
+
   it "raises on unsupported param types" do
     with_db do |db|
       expect_raises Exception, "SQLite3::Statement does not support NotSupportedType params" do
