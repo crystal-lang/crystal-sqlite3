@@ -198,11 +198,12 @@ describe Driver do
   it "insert/get value date from table using DB::ResultSet" do
     with_db do |db|
       value = Time.new(2016, 7, 22, 15, 0, 0, 0)
-      db.exec "create table table1 (col1 #{sqlite_type_for(value)} not null)"
-      db.exec %(insert into table1 values (?)), value
+      db.exec "create table table1 (col1 #{sqlite_type_for(value)} not null, col2 #{sqlite_type_for(value)})"
+      db.exec %(insert into table1 values (?, ?)), value, nil
       rs = db.query("select col1 from table1").as(DB::ResultSet)
       rs.move_next # go to first row
       rs.read(Time).should eq(value)
+      rs.read(Time?).should eq(nil)
     end
   end
 

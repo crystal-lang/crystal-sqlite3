@@ -51,7 +51,7 @@ class SQLite3::ResultSet < DB::ResultSet
     read(Int64).to_i32
   end
 
-  def read(type : Union(Int32 | Nil).class) : Int32 | Nil
+  def read(type : Int32?.class) : Int32 | Nil
     if v = read(Int64?)
       v.to_i32
     else
@@ -63,7 +63,7 @@ class SQLite3::ResultSet < DB::ResultSet
     read(Float64).to_f32
   end
 
-  def read(type : Union(Float32 | Nil).class) : Float32 | Nil
+  def read(type : Float32?.class) : Float32 | Nil
     if v = read(Float64?)
       v.to_f32
     else
@@ -75,8 +75,8 @@ class SQLite3::ResultSet < DB::ResultSet
     Time.parse read(String), SQLite3::DATE_FORMAT
   end
 
-  def read(type : Union(Time | Nil).class) : Time | Nil
-    if v = read(String)
+  def read(type : Time?.class) : Time | Nil
+    if v = read(String?)
       Time.parse v, SQLite3::DATE_FORMAT
     else
       nil
@@ -87,7 +87,7 @@ class SQLite3::ResultSet < DB::ResultSet
     read(Int64) != 0
   end
 
-  def read(type : Union(Bool | Nil).class) : Bool | Nil
+  def read(type : Bool?.class) : Bool | Nil
     if v = read(Int64?)
       v != 0
     else
