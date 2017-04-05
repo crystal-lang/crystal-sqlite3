@@ -51,48 +51,32 @@ class SQLite3::ResultSet < DB::ResultSet
     read(Int64).to_i32
   end
 
-  def read(type : Int32?.class) : Int32 | Nil
-    if v = read(Int64?)
-      v.to_i32
-    else
-      nil
-    end
+  def read(type : Int32?.class) : Int32?
+    read(Int64?).try &.to_i32
   end
 
   def read(t : Float32.class) : Float32
     read(Float64).to_f32
   end
 
-  def read(type : Float32?.class) : Float32 | Nil
-    if v = read(Float64?)
-      v.to_f32
-    else
-      nil
-    end
+  def read(type : Float32?.class) : Float32?
+    read(Float64?).try &.to_f32
   end
 
   def read(t : Time.class) : Time
     Time.parse read(String), SQLite3::DATE_FORMAT
   end
 
-  def read(type : Time?.class) : Time | Nil
-    if v = read(String?)
-      Time.parse v, SQLite3::DATE_FORMAT
-    else
-      nil
-    end
+  def read(type : Time?.class) : Time?
+    read(String?).try { |v| Time.parse v, SQLite3::DATE_FORMAT }
   end
 
   def read(t : Bool.class) : Bool
     read(Int64) != 0
   end
 
-  def read(type : Bool?.class) : Bool | Nil
-    if v = read(Int64?)
-      v != 0
-    else
-      nil
-    end
+  def read(type : Bool?.class) : Bool?
+    read(Int64?).try { |v| v != 0 }
   end
 
   def column_count
