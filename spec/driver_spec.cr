@@ -163,6 +163,14 @@ describe Driver do
         db.query_one("select col1 from table1", as: typeof({{value}})).should eq({{value}})
       end
     end
+
+    it "insert/get value {{value.id}} as Union(#{typeof({{value}})} | Nil)" do
+      with_db do |db|
+        db.exec "create table table1 (col1 #{sqlite_type_for({{value}})})"
+        db.exec %(insert into table1 (col1) values (?)), {{value}}
+        db.query_one("select col1 from table1", as: Union(typeof({{value}}) | Nil)).should eq({{value}})
+      end
+    end
   {% end %}
 
   it "insert/get blob value from table" do
@@ -183,6 +191,19 @@ describe Driver do
       db.exec "create table table1 (col1 #{sqlite_type_for(value)})"
       db.exec %(insert into table1 values (?)), value
       db.query_one("select col1 from table1", as: Time).should eq(value)
+      db.query_one("select col1 from table1", as: Time?).should eq(value)
+    end
+  end
+
+  it "insert/get value date from table using DB::ResultSet" do
+    with_db do |db|
+      value = Time.new(2016, 7, 22, 15, 0, 0, 0)
+      db.exec "create table table1 (col1 #{sqlite_type_for(value)} not null, col2 #{sqlite_type_for(value)})"
+      db.exec %(insert into table1 values (?, ?)), value, nil
+      rs = db.query("select col1 from table1").as(DB::ResultSet)
+      rs.move_next # go to first row
+      rs.read(Time).should eq(value)
+      rs.read(Time?).should eq(nil)
     end
   end
 

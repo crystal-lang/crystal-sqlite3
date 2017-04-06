@@ -44,23 +44,39 @@ class SQLite3::ResultSet < DB::ResultSet
         raise Exception.new(sqlite3_statement.sqlite3_connection)
       end
     @column_index += 1
-    value
+    value.as(DB::Any)
   end
 
   def read(t : Int32.class) : Int32
     read(Int64).to_i32
   end
 
+  def read(type : Int32?.class) : Int32?
+    read(Int64?).try &.to_i32
+  end
+
   def read(t : Float32.class) : Float32
     read(Float64).to_f32
+  end
+
+  def read(type : Float32?.class) : Float32?
+    read(Float64?).try &.to_f32
   end
 
   def read(t : Time.class) : Time
     Time.parse read(String), SQLite3::DATE_FORMAT
   end
 
+  def read(type : Time?.class) : Time?
+    read(String?).try { |v| Time.parse v, SQLite3::DATE_FORMAT }
+  end
+
   def read(t : Bool.class) : Bool
     read(Int64) != 0
+  end
+
+  def read(type : Bool?.class) : Bool?
+    read(Int64?).try { |v| v != 0 }
   end
 
   def column_count
