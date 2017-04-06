@@ -44,7 +44,7 @@ class SQLite3::ResultSet < DB::ResultSet
         raise Exception.new(sqlite3_statement.sqlite3_connection)
       end
     @column_index += 1
-    value.as(Float64 | Int64 | Slice(UInt8) | String | Time | Nil)
+    value.as(DB::Any)
   end
 
   def read(t : Int32.class) : Int32
