@@ -48,4 +48,5 @@ lib LibSQLite3
 
   fun finalize = sqlite3_finalize(stmt : Statement) : Int32
   fun close_v2 = sqlite3_close_v2(SQLite3) : Int32
+  fun close = sqlite3_close(SQLite3) : Int32
 end

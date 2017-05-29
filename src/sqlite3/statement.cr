@@ -28,7 +28,7 @@ class SQLite3::Statement < DB::Statement
     DB::ExecResult.new rows_affected, last_id
   end
 
-  protected def on_close
+  protected def do_close
     super
     check LibSQLite3.finalize(self)
   end

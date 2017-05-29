@@ -32,7 +32,7 @@ class SQLite3::Connection < DB::Connection
 
   def do_close
     super
-    LibSQLite3.close_v2(self)
+    check LibSQLite3.close(self)
   end
 
   # :nodoc:
