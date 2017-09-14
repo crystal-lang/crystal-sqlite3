@@ -19,7 +19,11 @@ class SQLite3::Statement < DB::Statement
     end
 
     # exec
-    step = LibSQLite3::Code.new LibSQLite3.step(self)
+    step = nil
+    loop do
+      step = LibSQLite3::Code.new LibSQLite3.step(self)
+      break unless step == LibSQLite3::Code::ROW
+    end
     raise Exception.new(sqlite3_connection) unless step == LibSQLite3::Code::DONE
 
     rows_affected = LibSQLite3.changes(sqlite3_connection).to_i64
