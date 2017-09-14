@@ -119,4 +119,12 @@ DB::DriverSpecs(DB::Any).run do
       end
     end
   end
+
+  it "handles single-step pragma statements" do |db|
+    db.exec %(PRAGMA synchronous = OFF)
+  end
+
+  it "handles multi-step pragma statements" do |db|
+    db.exec %(PRAGMA journal_mode = memory)
+  end
 end
