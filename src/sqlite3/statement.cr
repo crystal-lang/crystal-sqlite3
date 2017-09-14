@@ -19,7 +19,7 @@ class SQLite3::Statement < DB::Statement
     end
 
     # exec
-    step = nil
+    step = uninitialized LibSQLite3::Code
     loop do
       step = LibSQLite3::Code.new LibSQLite3.step(self)
       break unless step == LibSQLite3::Code::ROW
