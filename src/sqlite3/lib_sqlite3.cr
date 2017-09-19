@@ -36,7 +36,7 @@ lib LibSQLite3
   fun bind_int = sqlite3_bind_int(stmt : Statement, idx : Int32, value : Int32) : Int32
   fun bind_int64 = sqlite3_bind_int64(stmt : Statement, idx : Int32, value : Int64) : Int32
   fun bind_text = sqlite3_bind_text(stmt : Statement, idx : Int32, value : UInt8*, bytes : Int32, destructor : Void* ->) : Int32
-  fun bind_blob = sqlite3_bind_text(stmt : Statement, idx : Int32, value : UInt8*, bytes : Int32, destructor : Void* ->) : Int32
+  fun bind_blob = sqlite3_bind_blob(stmt : Statement, idx : Int32, value : UInt8*, bytes : Int32, destructor : Void* ->) : Int32
   fun bind_null = sqlite3_bind_null(stmt : Statement, idx : Int32) : Int32
   fun bind_double = sqlite3_bind_double(stmt : Statement, idx : Int32, value : Float64) : Int32
 
