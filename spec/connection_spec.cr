@@ -14,7 +14,7 @@ describe Connection do
   it "opens a database and then backs it up to another db" do
     with_db do |db|
       with_db("./test2.db") do |backup_db|
-        db.exec "create table person (name string, age integer)"
+        db.exec "create table person (name text, age integer)"
         db.exec "insert into person values (\"foo\", 10)"
 
         dump db, backup_db
@@ -32,7 +32,7 @@ describe Connection do
   it "opens a database, inserts records, dumps to an in-memory db, insers some more, then dumps to the source" do
     with_db do |db|
       with_mem_db do |in_memory_db|
-        db.exec "create table person (name string, age integer)"
+        db.exec "create table person (name text, age integer)"
         db.exec "insert into person values (\"foo\", 10)"
         dump db, in_memory_db
 
@@ -48,7 +48,7 @@ describe Connection do
   it "opens a database, inserts records (>1024K), and dumps to an in-memory db" do
     with_db do |db|
       with_mem_db do |in_memory_db|
-        db.exec "create table person (name string, age integer)"
+        db.exec "create table person (name text, age integer)"
         db.transaction do |tx|
           100_000.times { tx.connection.exec "insert into person values (\"foo\", 10)" }
         end
@@ -62,7 +62,7 @@ describe Connection do
     with_cnn do |cnn|
       cnn.should be_a(SQLite3::Connection)
 
-      cnn.exec "create table person (name string, age integer)"
+      cnn.exec "create table person (name text, age integer)"
       cnn.exec "insert into person values (\"foo\", 10)"
 
       cnn.scalar("select count(*) from person").should eq(1)

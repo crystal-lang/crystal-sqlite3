@@ -80,7 +80,7 @@ DB::DriverSpecs(DB::Any).run do
   end
 
   it "gets last insert row id", prepared: :both do |db|
-    db.exec "create table person (name string, age integer)"
+    db.exec "create table person (name text, age integer)"
     db.exec %(insert into person values ("foo", 10))
     res = db.exec %(insert into person values ("foo", 10))
     res.last_insert_id.should eq(2)
