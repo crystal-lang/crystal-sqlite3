@@ -20,7 +20,7 @@ dependencies:
 require "sqlite3"
 
 DB.open "sqlite3://./data.db" do |db|
-  db.exec "create table contacts (name string, age integer)"
+  db.exec "create table contacts (name text, age integer)"
   db.exec "insert into contacts values (?, ?)", "John Doe", 30
 
   args = [] of DB::Any
