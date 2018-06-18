@@ -1,3 +1,8 @@
+## v0.10.0 (2018-06-18)
+
+* Fix compatibility issues for crystal 0.25.0 ([#34](https://github.com/crystal-lang/crystal-sqlite3/pull/34))
+  * All the time instances are translated to UTC before saving them in the db
+
 ## v0.9.0 (2017-12-31)
 
 * Update to crystal-db ~> 0.5.0
