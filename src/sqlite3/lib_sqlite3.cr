@@ -7,37 +7,68 @@ lib LibSQLite3
   type SQLite3Backup = Void*
 
   enum Code
-    OKAY       =   0 # Successful result
-    ERROR      =   1 # Generic error
-    INTERNAL   =   2 # Internal logic error in SQLite
-    PERM       =   3 # Access permission denied
-    ABORT      =   4 # Callback routine requested an abort
-    BUSY       =   5 # The database file is locked
-    LOCKED     =   6 # A table in the database is locked
-    NOMEM      =   7 # A malloc() failed
-    READONLY   =   8 # Attempt to write a readonly database
-    INTERRUPT  =   9 # Operation terminated by sqlite3_interrupt()
-    IOERR      =  10 # Some kind of disk I/O error occurred
-    CORRUPT    =  11 # The database disk image is malformed
-    NOTFOUND   =  12 # Unknown opcode in sqlite3_file_control()
-    FULL       =  13 # Insertion failed because database is full
-    CANTOPEN   =  14 # Unable to open the database file
-    PROTOCOL   =  15 # Database lock protocol error
-    EMPTY      =  16 # Internal use only
-    SCHEMA     =  17 # The database schema changed
-    TOOBIG     =  18 # String or BLOB exceeds size limit
-    CONSTRAINT =  19 # Abort due to constraint violation
-    MISMATCH   =  20 # Data type mismatch
-    MISUSE     =  21 # Library used incorrectly
-    NOLFS      =  22 # Uses OS features not supported on host
-    AUTH       =  23 # Authorization denied
-    FORMAT     =  24 # Not used
-    RANGE      =  25 # 2nd parameter to sqlite3_bind out of range
-    NOTADB     =  26 # File opened that is not a database file
-    NOTICE     =  27 # Notifications from sqlite3_log()
-    WARNING    =  28 # Warnings from sqlite3_log()
-    ROW        = 100 # sqlite3_step() has another row ready
-    DONE       = 101 # sqlite3_step() has finished executing
+    # Successful result
+    OKAY = 0
+    # Generic error
+    ERROR = 1
+    # Internal logic error in SQLite
+    INTERNAL = 2
+    # Access permission denied
+    PERM = 3
+    # Callback routine requested an abort
+    ABORT = 4
+    # The database file is locked
+    BUSY = 5
+    # A table in the database is locked
+    LOCKED = 6
+    # A malloc() failed
+    NOMEM = 7
+    # Attempt to write a readonly database
+    READONLY = 8
+    # Operation terminated by sqlite3_interrupt()
+    INTERRUPT = 9
+    # Some kind of disk I/O error occurred
+    IOERR = 10
+    # The database disk image is malformed
+    CORRUPT = 11
+    # Unknown opcode in sqlite3_file_control()
+    NOTFOUND = 12
+    # Insertion failed because database is full
+    FULL = 13
+    # Unable to open the database file
+    CANTOPEN = 14
+    # Database lock protocol error
+    PROTOCOL = 15
+    # Internal use only
+    EMPTY = 16
+    # The database schema changed
+    SCHEMA = 17
+    # String or BLOB exceeds size limit
+    TOOBIG = 18
+    # Abort due to constraint violation
+    CONSTRAINT = 19
+    # Data type mismatch
+    MISMATCH = 20
+    # Library used incorrectly
+    MISUSE = 21
+    # Uses OS features not supported on host
+    NOLFS = 22
+    # Authorization denied
+    AUTH = 23
+    # Not used
+    FORMAT = 24
+    # 2nd parameter to sqlite3_bind out of range
+    RANGE = 25
+    # File opened that is not a database file
+    NOTADB = 26
+    # Notifications from sqlite3_log()
+    NOTICE = 27
+    # Warnings from sqlite3_log()
+    WARNING = 28
+    # sqlite3_step() has another row ready
+    ROW = 100
+    # sqlite3_step() has finished executing
+    DONE = 101
   end
 
   alias Callback = (Void*, Int32, UInt8**, UInt8**) -> Int32
