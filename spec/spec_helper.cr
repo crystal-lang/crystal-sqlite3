@@ -19,11 +19,13 @@ ensure
   File.delete(DB_FILENAME)
 end
 
-def with_db(name, &block : DB::Database ->)
-  File.delete(name) rescue nil
-  DB.open "sqlite3:#{name}", &block
+def with_db(config, &block : DB::Database ->)
+  uri = "sqlite3:#{config}"
+  filename = SQLite3::Connection.filename(URI.parse(uri))
+  File.delete(filename) rescue nil
+  DB.open uri, &block
 ensure
-  File.delete(name)
+  File.delete(filename) if filename
 end
 
 def with_mem_db(&block : DB::Database ->)
