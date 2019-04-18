@@ -21,7 +21,12 @@ describe DB::Pool do
       fibers.times { channel.receive }
 
       # all numbers were inserted
-      s = fibers * max_n * (max_n + 1) / 2
+      s : Int32
+      {% if compare_versions(Crystal::VERSION, "0.28.0") >= 0 %}
+        s = fibers * max_n * (max_n + 1) // 2
+      {% else %}
+        s = fibers * max_n * (max_n + 1) / 2
+      {% end %}
       db.scalar("select sum(n) from numbers").should eq(s)
 
       # numbers were not inserted one fiber at a time
