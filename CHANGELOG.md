@@ -1,3 +1,8 @@
+## v0.11.0 (2019-04-18)
+
+* Fix compatibility issues for crystal 0.28.0 ([#38](https://github.com/crystal-lang/crystal-sqlite3/pull/38))
+* Add complete list of `LibSQLite3::Code` values. ([#36](https://github.com/crystal-lang/crystal-sqlite3/pull/36), thanks @t-richards)
+
 ## v0.10.0 (2018-06-18)
 
 * Fix compatibility issues for crystal 0.25.0 ([#34](https://github.com/crystal-lang/crystal-sqlite3/pull/34))
