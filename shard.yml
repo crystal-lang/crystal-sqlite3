@@ -10,4 +10,6 @@ authors:
   - Ary Borenszweig <aborenszweig@manas.tech>
   - Brian J. Cardiff <bcardiff@manas.tech>
 
+crystal: 0.28.0
+
 license: MIT

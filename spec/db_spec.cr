@@ -35,7 +35,7 @@ DB::DriverSpecs(DB::Any).run do
   sample_value 1.5, "float", "1.5"
   sample_value Time.utc(2016, 2, 15), "text", "'2016-02-15 00:00:00.000'", type_safe_value: false
   sample_value Time.utc(2016, 2, 15, 10, 15, 30), "text", "'2016-02-15 10:15:30.000'", type_safe_value: false
-  sample_value Time.new(2016, 2, 15, 7, 15, 30, location: Time::Location.fixed("fixed", -3*3600)), "text", "'2016-02-15 10:15:30.000'", type_safe_value: false
+  sample_value Time.local(2016, 2, 15, 7, 15, 30, location: Time::Location.fixed("fixed", -3*3600)), "text", "'2016-02-15 10:15:30.000'", type_safe_value: false
 
   ary = UInt8[0x53, 0x51, 0x4C, 0x69, 0x74, 0x65]
   sample_value Bytes.new(ary.to_unsafe, ary.size), "blob", "X'53514C697465'" # , type_safe_value: false
