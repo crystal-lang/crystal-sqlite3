@@ -19,13 +19,7 @@ describe Driver do
     assert_filename("sqlite3:/path/to/file.db", "/path/to/file.db")
     assert_filename("sqlite3:///path/to/file.db", "/path/to/file.db")
 
-    {% if compare_versions(Crystal::VERSION, "0.28.0") >= 0 %}
-      # Before 0.28.0 the filename had the query string in this case
-      # but it didn't bother when deleting the file in pool_spec.cr.
-      # After 0.28.0 the behavior is changed, but can't be fixed prior that
-      # due to the use of URI#opaque.
-      assert_filename("sqlite3:./file.db?max_pool_size=5", "./file.db")
-    {% end %}
+    assert_filename("sqlite3:./file.db?max_pool_size=5", "./file.db")
     assert_filename("sqlite3:/path/to/file.db?max_pool_size=5", "/path/to/file.db")
     assert_filename("sqlite3://./file.db?max_pool_size=5", "./file.db")
     assert_filename("sqlite3:///path/to/file.db?max_pool_size=5", "/path/to/file.db")
