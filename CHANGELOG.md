@@ -1,3 +1,9 @@
+## v0.12.0 (2019-06-07)
+
+This release requires crystal >= 0.28.0
+
+* Fix compatibility issues for crystal 0.29.0 ([#40](https://github.com/crystal-lang/crystal-sqlite3/pull/40))
+
 ## v0.11.0 (2019-04-18)
 
 * Fix compatibility issues for crystal 0.28.0 ([#38](https://github.com/crystal-lang/crystal-sqlite3/pull/38))
