@@ -12,11 +12,11 @@ class SQLite3::Connection < DB::Connection
     URI.unescape((uri.host || "") + uri.path)
   end
 
-  def build_prepared_statement(query)
+  def build_prepared_statement(query) : Statement
     Statement.new(self, query)
   end
 
-  def build_unprepared_statement(query)
+  def build_unprepared_statement(query) : Statement
     # sqlite3 does not support unprepared statement.
     # All statements once prepared should be released
     # when unneeded. Unprepared statement are not aim
