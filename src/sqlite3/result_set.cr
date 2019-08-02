@@ -9,7 +9,7 @@ class SQLite3::ResultSet < DB::ResultSet
   # Advances to the next row. Returns `true` if there's a next row,
   # `false` otherwise. Must be called at least once to advance to the first
   # row.
-  def move_next
+  def move_next : Bool
     @column_index = 0
 
     case step
@@ -79,11 +79,11 @@ class SQLite3::ResultSet < DB::ResultSet
     read(Int64?).try &.!=(0)
   end
 
-  def column_count
+  def column_count : Int32
     LibSQLite3.column_count(self)
   end
 
-  def column_name(index)
+  def column_name(index) : String
     String.new LibSQLite3.column_name(self, index)
   end
 

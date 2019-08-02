@@ -9,14 +9,18 @@ class SQLite3::Connection < DB::Connection
   end
 
   def self.filename(uri : URI)
-    URI.unescape((uri.host || "") + uri.path)
+    {% if compare_versions(Crystal::VERSION, "0.30.0-0") >= 0 %}
+      URI.decode_www_form((uri.host || "") + uri.path)
+    {% else %}
+      URI.unescape((uri.host || "") + uri.path)
+    {% end %}
   end
 
-  def build_prepared_statement(query)
+  def build_prepared_statement(query) : Statement
     Statement.new(self, query)
   end
 
-  def build_unprepared_statement(query)
+  def build_unprepared_statement(query) : Statement
     # sqlite3 does not support unprepared statement.
     # All statements once prepared should be released
     # when unneeded. Unprepared statement are not aim
