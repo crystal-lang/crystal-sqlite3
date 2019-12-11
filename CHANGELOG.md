@@ -1,3 +1,7 @@
+## v0.15.0 (2019-12-11)
+
+* Update to crystal-db ~> 0.8.0. ([#50](https://github.com/crystal-lang/crystal-sqlite3/pull/50))
+
 ## v0.14.0 (2019-09-23)
 
 * Update to crystal-db ~> 0.7.0. ([#44](https://github.com/crystal-lang/crystal-sqlite3/pull/44))
