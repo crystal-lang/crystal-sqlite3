@@ -26,7 +26,7 @@ DB.open "sqlite3://./data.db" do |db|
   args = [] of DB::Any
   args << "Sarah"
   args << 33
-  db.exec "insert into contacts values (?, ?)", args
+  db.exec "insert into contacts values (?, ?)", args: args
 
   puts "max age:"
   puts db.scalar "select max(age) from contacts" # => 33
