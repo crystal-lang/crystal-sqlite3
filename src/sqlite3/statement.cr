@@ -1,7 +1,7 @@
 class SQLite3::Statement < DB::Statement
-  def initialize(connection, sql)
-    super(connection)
-    check LibSQLite3.prepare_v2(sqlite3_connection, sql, sql.bytesize + 1, out @stmt, nil)
+  def initialize(connection, command)
+    super(connection, command)
+    check LibSQLite3.prepare_v2(sqlite3_connection, command, command.bytesize + 1, out @stmt, nil)
   end
 
   protected def perform_query(args : Enumerable) : DB::ResultSet
