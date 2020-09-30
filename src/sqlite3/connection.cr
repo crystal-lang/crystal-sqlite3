@@ -9,11 +9,7 @@ class SQLite3::Connection < DB::Connection
   end
 
   def self.filename(uri : URI)
-    {% if compare_versions(Crystal::VERSION, "0.30.0-0") >= 0 %}
-      URI.decode_www_form((uri.host || "") + uri.path)
-    {% else %}
-      URI.unescape((uri.host || "") + uri.path)
-    {% end %}
+    URI.decode_www_form((uri.host || "") + uri.path)
   end
 
   def build_prepared_statement(query) : Statement
