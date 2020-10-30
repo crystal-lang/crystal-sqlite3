@@ -5,6 +5,8 @@ lib LibSQLite3
   type SQLite3 = Void*
   type Statement = Void*
   type SQLite3Backup = Void*
+  type SQLite3Context = Void*
+  type SQLite3Value = Void*
 
   enum Code
     # Successful result
@@ -72,6 +74,7 @@ lib LibSQLite3
   end
 
   alias Callback = (Void*, Int32, UInt8**, UInt8**) -> Int32
+  alias FuncCallback = (SQLite3Context, Int32, SQLite3Value*) -> Void
 
   fun open_v2 = sqlite3_open_v2(filename : UInt8*, db : SQLite3*, flags : ::SQLite3::Flag, zVfs : UInt8*) : Int32
 
@@ -108,4 +111,8 @@ lib LibSQLite3
   fun finalize = sqlite3_finalize(stmt : Statement) : Int32
   fun close_v2 = sqlite3_close_v2(SQLite3) : Int32
   fun close = sqlite3_close(SQLite3) : Int32
+
+  fun create_function = sqlite3_create_function(SQLite3, funcName : UInt8*, nArg : Int32, eTextRep : Int32, pApp : Void*, xFunc : FuncCallback, xStep : Void*, xFinal : Void*) : Int32
+  fun value_text = sqlite3_value_text(SQLite3Value) : UInt8*
+  fun result_int = sqlite3_result_int(SQLite3Context, Int32) : Nil
 end
