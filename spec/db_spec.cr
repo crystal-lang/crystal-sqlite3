@@ -128,4 +128,9 @@ DB::DriverSpecs(DB::Any).run do
   it "handles multi-step pragma statements" do |db|
     db.exec %(PRAGMA journal_mode = memory)
   end
+
+  it "handles REGEXP operator" do |db|
+    (db.scalar "select 'unmatching text' REGEXP '^m'").should eq 0
+    (db.scalar "select 'matching text' REGEXP '^m'").should eq 1
+  end
 end

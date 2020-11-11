@@ -4,6 +4,8 @@ class SQLite3::Connection < DB::Connection
     filename = self.class.filename(database.uri)
     # TODO maybe enable Flag::URI to parse query string in the uri as additional flags
     check LibSQLite3.open_v2(filename, out @db, (Flag::READWRITE | Flag::CREATE), nil)
+    # 2 means 2 arguments; 1 is the code for UTF-8
+    check LibSQLite3.create_function(@db, "regexp", 2, 1, nil, SQLite3::REGEXP_FN, nil, nil)
   rescue
     raise DB::ConnectionRefused.new
   end
