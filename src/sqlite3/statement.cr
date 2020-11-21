@@ -70,7 +70,7 @@ class SQLite3::Statement < DB::Statement
   end
 
   private def bind_arg(index, value : Time)
-    bind_arg(index, value.in(SQLite3::TIME_ZONE).to_s(SQLite3::DATE_FORMAT))
+    bind_arg(index, value.in(SQLite3::TIME_ZONE).to_s(SQLite3::DATE_FORMAT_SUBSECOND))
   end
 
   private def bind_arg(index, value)

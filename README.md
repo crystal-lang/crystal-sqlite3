@@ -46,5 +46,5 @@ end
 
 ### DB::Any
 
-* `Time` is implemented as `TEXT` column using `SQLite3::DATE_FORMAT` format.
+* `Time` is implemented as `TEXT` column using `SQLite3::DATE_FORMAT_SUBSECOND` format (or `SQLite3::DATE_FORMAT_SECOND` if the text does not contain a dot).
 * `Bool` is implemented as `INT` column mapping `0`/`1` values.
