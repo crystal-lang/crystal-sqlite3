@@ -1,3 +1,7 @@
+## v0.18.0 (2021-01-26)
+
+* Add `REGEXP` support powered by Crystal's std-lib Regex. ([#62](https://github.com/crystal-lang/crystal-sqlite3/pull/62), thanks @yujiri8)
+
 ## v0.17.0 (2020-09-30)
 
 * Update to crystal-db ~> 0.10.0. ([#58](https://github.com/crystal-lang/crystal-sqlite3/pull/58))
