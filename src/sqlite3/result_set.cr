@@ -64,11 +64,22 @@ class SQLite3::ResultSet < DB::ResultSet
   end
 
   def read(t : Time.class) : Time
-    Time.parse read(String), SQLite3::DATE_FORMAT, location: SQLite3::TIME_ZONE
+    text = read(String)
+    if text.includes? "."
+      Time.parse text, SQLite3::DATE_FORMAT_SUBSECOND, location: SQLite3::TIME_ZONE
+    else
+      Time.parse text, SQLite3::DATE_FORMAT_SECOND, location: SQLite3::TIME_ZONE
+    end
   end
 
   def read(t : Time?.class) : Time?
-    read(String?).try { |v| Time.parse(v, SQLite3::DATE_FORMAT, location: SQLite3::TIME_ZONE) }
+    read(String?).try { |v|
+      if v.includes? "."
+        Time.parse v, SQLite3::DATE_FORMAT_SUBSECOND, location: SQLite3::TIME_ZONE
+      else
+        Time.parse v, SQLite3::DATE_FORMAT_SECOND, location: SQLite3::TIME_ZONE
+      end
+    }
   end
 
   def read(t : Bool.class) : Bool

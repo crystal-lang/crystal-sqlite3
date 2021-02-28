@@ -2,7 +2,8 @@ require "db"
 require "./sqlite3/**"
 
 module SQLite3
-  DATE_FORMAT = "%F %H:%M:%S.%L"
+  DATE_FORMAT_SUBSECOND = "%F %H:%M:%S.%L"
+  DATE_FORMAT_SECOND    = "%F %H:%M:%S"
 
   # :nodoc:
   TIME_ZONE = Time::Location::UTC
