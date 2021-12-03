@@ -1,5 +1,12 @@
 # How to Compile And Link SQLite
 
+There are two main reasons to compile SQLite from source and they are both about getting features that are otherwise unavailable.
+
+- You may need a feature from a release that haven't made it to your distro yet or you want to use the latest code from development.
+- Perhaps you want some compile time features enabled that are not commonly enabled by default.
+
+This guide assumes the first reason and goes through how to compile the latest release.
+
 
 ## Install Prerequisites (Ubuntu)
 
@@ -43,6 +50,9 @@ gcc -lpthread -ldl -shared -o libsqlite3.so.0 -fPIC sqlite3.c
 The path to libsqlite can be specified at runtime with "LD_LIBRARY_PATH".
 
 ```sh
+# directory of your crystal app
+cd ../app
+
 # Crystal run
 LD_LIBRARY_PATH=../sqlite-amalgamation-3370000 crystal run src/app.cr
 
