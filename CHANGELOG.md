@@ -1,3 +1,11 @@
+## v0.19.0 (2022-01-28)
+
+* Update to crystal-db ~> 0.11.0. ([#77](https://github.com/crystal-lang/crystal-sqlite3/pull/77))
+* Fix timestamps support to allow dealing with exact seconds values ([#68](https://github.com/crystal-lang/crystal-sqlite3/pull/68), thanks @yujiri8, @tenebrousedge)
+* Migrate CI to GitHub Actions. ([#78](https://github.com/crystal-lang/crystal-sqlite3/pull/78))
+
+This release requires Crystal 1.0.0 or later.
+
 ## v0.18.0 (2021-01-26)
 
 * Add `REGEXP` support powered by Crystal's std-lib Regex. ([#62](https://github.com/crystal-lang/crystal-sqlite3/pull/62), thanks @yujiri8)

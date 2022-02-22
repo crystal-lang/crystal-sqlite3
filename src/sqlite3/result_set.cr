@@ -47,6 +47,10 @@ class SQLite3::ResultSet < DB::ResultSet
     value
   end
 
+  def next_column_index : Int32
+    @column_index
+  end
+
   def read(t : Int32.class) : Int32
     read(Int64).to_i32
   end
