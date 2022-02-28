@@ -85,6 +85,21 @@ class SQLite3::Connection < DB::Connection
     @db
   end
 
+  # Enable or disable the loading of dynamic extensions in the current SQLite3 Connection
+  def enable_extension_load(onoff : Bool)
+    check LibSQLite3.db_config(@db, LibSQLite3::Option::SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION, onoff ? 1 : 0, nil)
+  end
+
+  # Load a dynamic extension from file in the current SQLite3 Connection
+  def load_extension(filename : String)
+    pzErrMsg : UInt8** = Pointer( UInt8* ).new( ( Pointer( UInt8 ).malloc( 250 ) ).address )
+    code = LibSQLite3.load_extension(@db, filename, nil, pzErrMsg)
+    if code != LibSQLite3::Code::OKAY
+      puts String.new(pzErrMsg.value)
+      raise Exception.new(@db)
+    end
+  end
+
   private def check(code)
     raise Exception.new(self) unless code == 0
   end

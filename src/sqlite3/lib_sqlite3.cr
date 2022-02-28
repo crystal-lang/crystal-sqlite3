@@ -73,10 +73,34 @@ lib LibSQLite3
     DONE = 101
   end
 
+  enum Option
+    SQLITE_DBCONFIG_MAINDBNAME            = 1000 # UInt8*
+    SQLITE_DBCONFIG_LOOKASIDE             = 1001 # void* Int32 Int32
+    SQLITE_DBCONFIG_ENABLE_FKEY           = 1002 # Int32 Int32*
+    SQLITE_DBCONFIG_ENABLE_TRIGGER        = 1003 # Int32 Int32*
+    SQLITE_DBCONFIG_ENABLE_FTS3_TOKENIZER = 1004 # Int32 Int32*
+    SQLITE_DBCONFIG_ENABLE_LOAD_EXTENSION = 1005 # Int32 Int32*
+    SQLITE_DBCONFIG_NO_CKPT_ON_CLOSE      = 1006 # Int32 Int32*
+    SQLITE_DBCONFIG_ENABLE_QPSG           = 1007 # Int32 Int32*
+    SQLITE_DBCONFIG_TRIGGER_EQP           = 1008 # Int32 Int32*
+    SQLITE_DBCONFIG_RESET_DATABASE        = 1009 # Int32 Int32*
+    SQLITE_DBCONFIG_DEFENSIVE             = 1010 # Int32 Int32*
+    SQLITE_DBCONFIG_WRITABLE_SCHEMA       = 1011 # Int32 Int32*
+    SQLITE_DBCONFIG_LEGACY_ALTER_TABLE    = 1012 # Int32 Int32*
+    SQLITE_DBCONFIG_DQS_DML               = 1013 # Int32 Int32*
+    SQLITE_DBCONFIG_DQS_DDL               = 1014 # Int32 Int32*
+    SQLITE_DBCONFIG_ENABLE_VIEW           = 1015 # Int32 Int32*
+    SQLITE_DBCONFIG_LEGACY_FILE_FORMAT    = 1016 # Int32 Int32*
+    SQLITE_DBCONFIG_TRUSTED_SCHEMA        = 1017 # Int32 Int32*
+  end
+
   alias Callback = (Void*, Int32, UInt8**, UInt8**) -> Int32
   alias FuncCallback = (SQLite3Context, Int32, SQLite3Value*) -> Void
 
   fun open_v2 = sqlite3_open_v2(filename : UInt8*, db : SQLite3*, flags : ::SQLite3::Flag, zVfs : UInt8*) : Int32
+
+  fun db_config = sqlite3_db_config(db : SQLite3, op : Option, ...) : Int32
+  fun load_extension = sqlite3_load_extension(db : SQLite3, zFile : UInt8*, zProc : UInt8*, pzErrMsg : UInt8**) : Code
 
   fun errcode = sqlite3_errcode(SQLite3) : Int32
   fun errmsg = sqlite3_errmsg(SQLite3) : UInt8*
