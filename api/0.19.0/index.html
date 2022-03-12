@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Crystal Docs 1.2.2">
+<meta name="crystal_docs.project_version" content="0.19.0">
+<meta name="crystal_docs.project_name" content="sqlite3">
+
+
+
+<link href="css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="js/doc.js"></script>
+
+  <meta name="repository-name" content="sqlite3">
+  <title>sqlite3 0.19.0</title>
+  <script type="text/javascript">
+  CrystalDocs.base_path = "";
+  </script>
+</head>
+<body>
+
+<svg class="hidden">
+  <symbol id="octicon-link" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+  </symbol>
+</svg>
+<div class="sidebar">
+  <div class="sidebar-header">
+    <div class="search-box">
+      <input type="search" class="search-input" placeholder="Search..." spellcheck="false" aria-label="Search">
+    </div>
+
+    <div class="project-summary">
+      <h1 class="project-name">
+        <a href="index.html">
+          sqlite3
+        </a>
+      </h1>
+
+      <span class="project-version">
+        0.19.0
+      </span>
+    </div>
+  </div>
+
+  <div class="search-results hidden">
+    <ul class="search-list"></ul>
+  </div>
+
+  <div class="types-list">
+    <ul>
+  
+  <li class="parent " data-id="sqlite3/SQLite3" data-name="sqlite3">
+      <a href="SQLite3.html">SQLite3</a>
+      
+        <ul>
+  
+  <li class=" " data-id="sqlite3/SQLite3/Connection" data-name="sqlite3::connection">
+      <a href="SQLite3/Connection.html">Connection</a>
+      
+    </li>
+  
+  <li class=" " data-id="sqlite3/SQLite3/Driver" data-name="sqlite3::driver">
+      <a href="SQLite3/Driver.html">Driver</a>
+      
+    </li>
+  
+  <li class=" " data-id="sqlite3/SQLite3/Exception" data-name="sqlite3::exception">
+      <a href="SQLite3/Exception.html">Exception</a>
+      
+    </li>
+  
+  <li class=" " data-id="sqlite3/SQLite3/Flag" data-name="sqlite3::flag">
+      <a href="SQLite3/Flag.html">Flag</a>
+      
+    </li>
+  
+  <li class=" " data-id="sqlite3/SQLite3/ResultSet" data-name="sqlite3::resultset">
+      <a href="SQLite3/ResultSet.html">ResultSet</a>
+      
+    </li>
+  
+  <li class=" " data-id="sqlite3/SQLite3/Statement" data-name="sqlite3::statement">
+      <a href="SQLite3/Statement.html">Statement</a>
+      
+    </li>
+  
+  <li class=" " data-id="sqlite3/SQLite3/Type" data-name="sqlite3::type">
+      <a href="SQLite3/Type.html">Type</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+</ul>
+
+  </div>
+</div>
+
+
+<div class="main-content">
+<h1><a id="crystal-sqlite3-build-status" class="anchor" href="#crystal-sqlite3-build-status">  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>crystal-sqlite3 <a href="https://travis-ci.org/crystal-lang/crystal-sqlite3"><img src="https://travis-ci.org/crystal-lang/crystal-sqlite3.svg?branch=master" alt="Build Status" /></a></h1>
+<p>SQLite3 bindings for <a href="http://crystal-lang.org/">Crystal</a>.</p>
+<p>Check <a href="https://github.com/crystal-lang/crystal-db">crystal-db</a> for general db driver documentation. crystal-sqlite3 driver is registered under <code>sqlite3://</code> uri.</p>
+<h2><a id="installation" class="anchor" href="#installation">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Installation</h2>
+<p>Add this to your application's <code>shard.yml</code>:</p>
+<pre><code class="language-yml">dependencies:
+  sqlite3:
+    github: crystal-lang/crystal-sqlite3</code></pre>
+<h3><a id="usage" class="anchor" href="#usage">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Usage</h3>
+<pre><code class="language-crystal"><span class="k">require</span> <span class="s">&quot;sqlite3&quot;</span>
+
+<span class="t">DB</span>.open <span class="s">&quot;sqlite3://./data.db&quot;</span> <span class="k">do</span> <span class="o">|</span>db<span class="o">|</span>
+  db.exec <span class="s">&quot;create table contacts (name text, age integer)&quot;</span>
+  db.exec <span class="s">&quot;insert into contacts values (?, ?)&quot;</span>, <span class="s">&quot;John Doe&quot;</span>, <span class="n">30</span>
+
+  args <span class="o">=</span> <span class="o">[]</span> <span class="k">of</span> <span class="t">DB</span><span class="t">::</span><span class="t">Any</span>
+  args <span class="o">&lt;&lt;</span> <span class="s">&quot;Sarah&quot;</span>
+  args <span class="o">&lt;&lt;</span> <span class="n">33</span>
+  db.exec <span class="s">&quot;insert into contacts values (?, ?)&quot;</span>, args: args
+
+  puts <span class="s">&quot;max age:&quot;</span>
+  puts db.scalar <span class="s">&quot;select max(age) from contacts&quot;</span> <span class="c"># =&gt; 33</span>
+
+  puts <span class="s">&quot;contacts:&quot;</span>
+  db.query <span class="s">&quot;select name, age from contacts order by age desc&quot;</span> <span class="k">do</span> <span class="o">|</span>rs<span class="o">|</span>
+    puts <span class="s">&quot;</span><span class="i">#{</span>rs.column_name(<span class="n">0</span>)<span class="i">}</span><span class="s"> (</span><span class="i">#{</span>rs.column_name(<span class="n">1</span>)<span class="i">}</span><span class="s">)&quot;</span>
+    <span class="c"># =&gt; name (age)</span>
+    rs.each <span class="k">do</span>
+      puts <span class="s">&quot;</span><span class="i">#{</span>rs.read(<span class="t">String</span>)<span class="i">}</span><span class="s"> (</span><span class="i">#{</span>rs.read(<span class="t">Int32</span>)<span class="i">}</span><span class="s">)&quot;</span>
+      <span class="c"># =&gt; Sarah (33)</span>
+      <span class="c"># =&gt; John Doe (30)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span></code></pre>
+<h3><a id="dbany" class="anchor" href="#dbany">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>DB::Any</h3>
+<ul>
+<li><code>Time</code> is implemented as <code>TEXT</code> column using <code><a href="SQLite3.html#DATE_FORMAT_SUBSECOND">SQLite3::DATE_FORMAT_SUBSECOND</a></code> format (or <code><a href="SQLite3.html#DATE_FORMAT_SECOND">SQLite3::DATE_FORMAT_SECOND</a></code> if the text does not contain a dot).</li>
+<li><code>Bool</code> is implemented as <code>INT</code> column mapping <code>0</code>/<code>1</code> values.</li>
+</ul>
+</div>
+</body>
+</html>
