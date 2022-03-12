@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Crystal Docs 1.2.2">
+<meta name="crystal_docs.project_version" content="0.19.0">
+<meta name="crystal_docs.project_name" content="sqlite3">
+
+
+
+<link href="../css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../js/doc.js"></script>
+
+  <meta name="repository-name" content="sqlite3">
+  <title>SQLite3::Flag - sqlite3 0.19.0</title>
+  <script type="text/javascript">
+    CrystalDocs.base_path = "../";
+  </script>
+</head>
+<body>
+
+<svg class="hidden">
+  <symbol id="octicon-link" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+  </symbol>
+</svg>
+<div class="sidebar">
+  <div class="sidebar-header">
+    <div class="search-box">
+      <input type="search" class="search-input" placeholder="Search..." spellcheck="false" aria-label="Search">
+    </div>
+
+    <div class="project-summary">
+      <h1 class="project-name">
+        <a href="../index.html">
+          sqlite3
+        </a>
+      </h1>
+
+      <span class="project-version">
+        0.19.0
+      </span>
+    </div>
+  </div>
+
+  <div class="search-results hidden">
+    <ul class="search-list"></ul>
+  </div>
+
+  <div class="types-list">
+    <ul>
+  
+  <li class="parent open current" data-id="sqlite3/SQLite3" data-name="sqlite3">
+      <a href="../SQLite3.html">SQLite3</a>
+      
+        <ul>
+  
+  <li class=" " data-id="sqlite3/SQLite3/Connection" data-name="sqlite3::connection">
+      <a href="../SQLite3/Connection.html">Connection</a>
+      
+    </li>
+  
+  <li class=" " data-id="sqlite3/SQLite3/Driver" data-name="sqlite3::driver">
+      <a href="../SQLite3/Driver.html">Driver</a>
+      
+    </li>
+  
+  <li class=" " data-id="sqlite3/SQLite3/Exception" data-name="sqlite3::exception">
+      <a href="../SQLite3/Exception.html">Exception</a>
+      
+    </li>
+  
+  <li class=" current" data-id="sqlite3/SQLite3/Flag" data-name="sqlite3::flag">
+      <a href="../SQLite3/Flag.html">Flag</a>
+      
+    </li>
+  
+  <li class=" " data-id="sqlite3/SQLite3/ResultSet" data-name="sqlite3::resultset">
+      <a href="../SQLite3/ResultSet.html">ResultSet</a>
+      
+    </li>
+  
+  <li class=" " data-id="sqlite3/SQLite3/Statement" data-name="sqlite3::statement">
+      <a href="../SQLite3/Statement.html">Statement</a>
+      
+    </li>
+  
+  <li class=" " data-id="sqlite3/SQLite3/Type" data-name="sqlite3::type">
+      <a href="../SQLite3/Type.html">Type</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+</ul>
+
+  </div>
+</div>
+
+
+<div class="main-content">
+<h1 class="type-name">
+
+  <span class="kind">enum</span> SQLite3::Flag
+
+</h1>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2>
+    <a id="defined-in" class="anchor" href="#defined-in">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Defined in:
+  </h2>
+  
+    
+      <a href="https://github.com/crystal-lang/crystal-sqlite3/blob/v0.19.0/src/sqlite3/flags.cr#L2" target="_blank">
+        sqlite3/flags.cr
+      </a>
+    
+    <br/>
+  
+
+
+
+  
+    <h2>
+      <a id="enum-members" class="anchor" href="#enum-members">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+      Enum Members
+    </h2>
+  
+  <dl>
+    
+      <dt class="entry-const" id="READONLY">
+        <strong>READONLY</strong> = <code><span class="n">1</span></code>
+      </dt>
+      
+    
+      <dt class="entry-const" id="READWRITE">
+        <strong>READWRITE</strong> = <code><span class="n">2</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>Ok for sqlite3_open_v2()</p>
+      </dd>
+      
+    
+      <dt class="entry-const" id="CREATE">
+        <strong>CREATE</strong> = <code><span class="n">4</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>Ok for sqlite3_open_v2()</p>
+      </dd>
+      
+    
+      <dt class="entry-const" id="DELETEONCLOSE">
+        <strong>DELETEONCLOSE</strong> = <code><span class="n">8</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>Ok for sqlite3_open_v2()</p>
+      </dd>
+      
+    
+      <dt class="entry-const" id="EXCLUSIVE">
+        <strong>EXCLUSIVE</strong> = <code><span class="n">16</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>VFS only</p>
+      </dd>
+      
+    
+      <dt class="entry-const" id="AUTOPROXY">
+        <strong>AUTOPROXY</strong> = <code><span class="n">32</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>VFS only</p>
+      </dd>
+      
+    
+      <dt class="entry-const" id="URI">
+        <strong>URI</strong> = <code><span class="n">64</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>VFS only</p>
+      </dd>
+      
+    
+      <dt class="entry-const" id="MEMORY">
+        <strong>MEMORY</strong> = <code><span class="n">128</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>Ok for sqlite3_open_v2()</p>
+      </dd>
+      
+    
+      <dt class="entry-const" id="MAIN_DB">
+        <strong>MAIN_DB</strong> = <code><span class="n">256</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>Ok for sqlite3_open_v2()</p>
+      </dd>
+      
+    
+      <dt class="entry-const" id="TEMP_DB">
+        <strong>TEMP_DB</strong> = <code><span class="n">512</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>VFS only</p>
+      </dd>
+      
+    
+      <dt class="entry-const" id="TRANSIENT_DB">
+        <strong>TRANSIENT_DB</strong> = <code><span class="n">1024</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>VFS only</p>
+      </dd>
+      
+    
+      <dt class="entry-const" id="MAIN_JOURNAL">
+        <strong>MAIN_JOURNAL</strong> = <code><span class="n">2048</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>VFS only</p>
+      </dd>
+      
+    
+      <dt class="entry-const" id="TEMP_JOURNAL">
+        <strong>TEMP_JOURNAL</strong> = <code><span class="n">4096</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>VFS only</p>
+      </dd>
+      
+    
+      <dt class="entry-const" id="SUBJOURNAL">
+        <strong>SUBJOURNAL</strong> = <code><span class="n">8192</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>VFS only</p>
+      </dd>
+      
+    
+      <dt class="entry-const" id="MASTER_JOURNAL">
+        <strong>MASTER_JOURNAL</strong> = <code><span class="n">16384</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>VFS only</p>
+      </dd>
+      
+    
+      <dt class="entry-const" id="NOMUTEX">
+        <strong>NOMUTEX</strong> = <code><span class="n">32768</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>VFS only</p>
+      </dd>
+      
+    
+      <dt class="entry-const" id="FULLMUTEX">
+        <strong>FULLMUTEX</strong> = <code><span class="n">65536</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>Ok for sqlite3_open_v2()</p>
+      </dd>
+      
+    
+      <dt class="entry-const" id="SHAREDCACHE">
+        <strong>SHAREDCACHE</strong> = <code><span class="n">131072</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>Ok for sqlite3_open_v2()</p>
+      </dd>
+      
+    
+      <dt class="entry-const" id="PRIVATECACHE">
+        <strong>PRIVATECACHE</strong> = <code><span class="n">262144</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>Ok for sqlite3_open_v2()</p>
+      </dd>
+      
+    
+      <dt class="entry-const" id="WAL">
+        <strong>WAL</strong> = <code><span class="n">524288</span></code>
+      </dt>
+      
+      <dd class="entry-const-doc">
+        <p>Ok for sqlite3_open_v2()</p>
+      </dd>
+      
+    
+  </dl>
+
+
+
+
+
+
+
+  <h2>
+    <a id="instance-method-summary" class="anchor" href="#instance-method-summary">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Instance Method Summary
+  </h2>
+  <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#autoproxy%3F-instance-method" class="signature"><strong>#autoproxy?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#create%3F-instance-method" class="signature"><strong>#create?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#deleteonclose%3F-instance-method" class="signature"><strong>#deleteonclose?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#exclusive%3F-instance-method" class="signature"><strong>#exclusive?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#fullmutex%3F-instance-method" class="signature"><strong>#fullmutex?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#main_db%3F-instance-method" class="signature"><strong>#main_db?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#main_journal%3F-instance-method" class="signature"><strong>#main_journal?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#master_journal%3F-instance-method" class="signature"><strong>#master_journal?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#memory%3F-instance-method" class="signature"><strong>#memory?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#nomutex%3F-instance-method" class="signature"><strong>#nomutex?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#none%3F-instance-method" class="signature"><strong>#none?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#privatecache%3F-instance-method" class="signature"><strong>#privatecache?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#readonly%3F-instance-method" class="signature"><strong>#readonly?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#readwrite%3F-instance-method" class="signature"><strong>#readwrite?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#sharedcache%3F-instance-method" class="signature"><strong>#sharedcache?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#subjournal%3F-instance-method" class="signature"><strong>#subjournal?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#temp_db%3F-instance-method" class="signature"><strong>#temp_db?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#temp_journal%3F-instance-method" class="signature"><strong>#temp_journal?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#transient_db%3F-instance-method" class="signature"><strong>#transient_db?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#uri%3F-instance-method" class="signature"><strong>#uri?</strong></a>
+        
+      </li>
+    
+      <li class="entry-summary">
+        <a href="#wal%3F-instance-method" class="signature"><strong>#wal?</strong></a>
+        
+      </li>
+    
+  </ul>
+
+
+
+
+
+<div class="methods-inherited">
+  
+    
+
+
+    
+
+
+    
+
+
+  
+    
+
+
+    
+
+
+    
+
+
+  
+    
+
+
+    
+
+
+    
+
+
+  
+    
+
+
+    
+
+
+    
+
+
+  
+</div>
+
+
+
+
+
+
+  <h2>
+    <a id="instance-method-detail" class="anchor" href="#instance-method-detail">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Instance Method Detail
+  </h2>
+  
+    <div class="entry-detail" id="autoproxy?-instance-method">
+      <div class="signature">
+        
+        def <strong>autoproxy?</strong>
+
+        <a class="method-permalink" href="#autoproxy%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-lang/crystal-sqlite3/blob/v0.19.0/src/sqlite3/flags.cr#L8" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="create?-instance-method">
+      <div class="signature">
+        
+        def <strong>create?</strong>
+
+        <a class="method-permalink" href="#create%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-lang/crystal-sqlite3/blob/v0.19.0/src/sqlite3/flags.cr#L5" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="deleteonclose?-instance-method">
+      <div class="signature">
+        
+        def <strong>deleteonclose?</strong>
+
+        <a class="method-permalink" href="#deleteonclose%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-lang/crystal-sqlite3/blob/v0.19.0/src/sqlite3/flags.cr#L6" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="exclusive?-instance-method">
+      <div class="signature">
+        
+        def <strong>exclusive?</strong>
+
+        <a class="method-permalink" href="#exclusive%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-lang/crystal-sqlite3/blob/v0.19.0/src/sqlite3/flags.cr#L7" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="fullmutex?-instance-method">
+      <div class="signature">
+        
+        def <strong>fullmutex?</strong>
+
+        <a class="method-permalink" href="#fullmutex%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-lang/crystal-sqlite3/blob/v0.19.0/src/sqlite3/flags.cr#L19" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="main_db?-instance-method">
+      <div class="signature">
+        
+        def <strong>main_db?</strong>
+
+        <a class="method-permalink" href="#main_db%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-lang/crystal-sqlite3/blob/v0.19.0/src/sqlite3/flags.cr#L11" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="main_journal?-instance-method">
+      <div class="signature">
+        
+        def <strong>main_journal?</strong>
+
+        <a class="method-permalink" href="#main_journal%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-lang/crystal-sqlite3/blob/v0.19.0/src/sqlite3/flags.cr#L14" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="master_journal?-instance-method">
+      <div class="signature">
+        
+        def <strong>master_journal?</strong>
+
+        <a class="method-permalink" href="#master_journal%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-lang/crystal-sqlite3/blob/v0.19.0/src/sqlite3/flags.cr#L17" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="memory?-instance-method">
+      <div class="signature">
+        
+        def <strong>memory?</strong>
+
+        <a class="method-permalink" href="#memory%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-lang/crystal-sqlite3/blob/v0.19.0/src/sqlite3/flags.cr#L10" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="nomutex?-instance-method">
+      <div class="signature">
+        
+        def <strong>nomutex?</strong>
+
+        <a class="method-permalink" href="#nomutex%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-lang/crystal-sqlite3/blob/v0.19.0/src/sqlite3/flags.cr#L18" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="none?-instance-method">
+      <div class="signature">
+        
+        def <strong>none?</strong>
+
+        <a class="method-permalink" href="#none%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-lang/crystal-sqlite3/blob/v0.19.0/src/sqlite3/flags.cr#L2" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="privatecache?-instance-method">
+      <div class="signature">
+        
+        def <strong>privatecache?</strong>
+
+        <a class="method-permalink" href="#privatecache%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-lang/crystal-sqlite3/blob/v0.19.0/src/sqlite3/flags.cr#L21" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="readonly?-instance-method">
+      <div class="signature">
+        
+        def <strong>readonly?</strong>
+
+        <a class="method-permalink" href="#readonly%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-lang/crystal-sqlite3/blob/v0.19.0/src/sqlite3/flags.cr#L3" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="readwrite?-instance-method">
+      <div class="signature">
+        
+        def <strong>readwrite?</strong>
+
+        <a class="method-permalink" href="#readwrite%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-lang/crystal-sqlite3/blob/v0.19.0/src/sqlite3/flags.cr#L4" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="sharedcache?-instance-method">
+      <div class="signature">
+        
+        def <strong>sharedcache?</strong>
+
+        <a class="method-permalink" href="#sharedcache%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-lang/crystal-sqlite3/blob/v0.19.0/src/sqlite3/flags.cr#L20" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="subjournal?-instance-method">
+      <div class="signature">
+        
+        def <strong>subjournal?</strong>
+
+        <a class="method-permalink" href="#subjournal%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-lang/crystal-sqlite3/blob/v0.19.0/src/sqlite3/flags.cr#L16" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="temp_db?-instance-method">
+      <div class="signature">
+        
+        def <strong>temp_db?</strong>
+
+        <a class="method-permalink" href="#temp_db%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-lang/crystal-sqlite3/blob/v0.19.0/src/sqlite3/flags.cr#L12" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="temp_journal?-instance-method">
+      <div class="signature">
+        
+        def <strong>temp_journal?</strong>
+
+        <a class="method-permalink" href="#temp_journal%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-lang/crystal-sqlite3/blob/v0.19.0/src/sqlite3/flags.cr#L15" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="transient_db?-instance-method">
+      <div class="signature">
+        
+        def <strong>transient_db?</strong>
+
+        <a class="method-permalink" href="#transient_db%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-lang/crystal-sqlite3/blob/v0.19.0/src/sqlite3/flags.cr#L13" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="uri?-instance-method">
+      <div class="signature">
+        
+        def <strong>uri?</strong>
+
+        <a class="method-permalink" href="#uri%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-lang/crystal-sqlite3/blob/v0.19.0/src/sqlite3/flags.cr#L9" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+    <div class="entry-detail" id="wal?-instance-method">
+      <div class="signature">
+        
+        def <strong>wal?</strong>
+
+        <a class="method-permalink" href="#wal%3F-instance-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-lang/crystal-sqlite3/blob/v0.19.0/src/sqlite3/flags.cr#L22" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+
+
+
+
+</div>
+
+</body>
+</html>

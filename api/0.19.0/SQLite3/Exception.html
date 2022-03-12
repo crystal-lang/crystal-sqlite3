@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Crystal Docs 1.2.2">
+<meta name="crystal_docs.project_version" content="0.19.0">
+<meta name="crystal_docs.project_name" content="sqlite3">
+
+
+
+<link href="../css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../js/doc.js"></script>
+
+  <meta name="repository-name" content="sqlite3">
+  <title>SQLite3::Exception - sqlite3 0.19.0</title>
+  <script type="text/javascript">
+    CrystalDocs.base_path = "../";
+  </script>
+</head>
+<body>
+
+<svg class="hidden">
+  <symbol id="octicon-link" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+  </symbol>
+</svg>
+<div class="sidebar">
+  <div class="sidebar-header">
+    <div class="search-box">
+      <input type="search" class="search-input" placeholder="Search..." spellcheck="false" aria-label="Search">
+    </div>
+
+    <div class="project-summary">
+      <h1 class="project-name">
+        <a href="../index.html">
+          sqlite3
+        </a>
+      </h1>
+
+      <span class="project-version">
+        0.19.0
+      </span>
+    </div>
+  </div>
+
+  <div class="search-results hidden">
+    <ul class="search-list"></ul>
+  </div>
+
+  <div class="types-list">
+    <ul>
+  
+  <li class="parent open current" data-id="sqlite3/SQLite3" data-name="sqlite3">
+      <a href="../SQLite3.html">SQLite3</a>
+      
+        <ul>
+  
+  <li class=" " data-id="sqlite3/SQLite3/Connection" data-name="sqlite3::connection">
+      <a href="../SQLite3/Connection.html">Connection</a>
+      
+    </li>
+  
+  <li class=" " data-id="sqlite3/SQLite3/Driver" data-name="sqlite3::driver">
+      <a href="../SQLite3/Driver.html">Driver</a>
+      
+    </li>
+  
+  <li class=" current" data-id="sqlite3/SQLite3/Exception" data-name="sqlite3::exception">
+      <a href="../SQLite3/Exception.html">Exception</a>
+      
+    </li>
+  
+  <li class=" " data-id="sqlite3/SQLite3/Flag" data-name="sqlite3::flag">
+      <a href="../SQLite3/Flag.html">Flag</a>
+      
+    </li>
+  
+  <li class=" " data-id="sqlite3/SQLite3/ResultSet" data-name="sqlite3::resultset">
+      <a href="../SQLite3/ResultSet.html">ResultSet</a>
+      
+    </li>
+  
+  <li class=" " data-id="sqlite3/SQLite3/Statement" data-name="sqlite3::statement">
+      <a href="../SQLite3/Statement.html">Statement</a>
+      
+    </li>
+  
+  <li class=" " data-id="sqlite3/SQLite3/Type" data-name="sqlite3::type">
+      <a href="../SQLite3/Type.html">Type</a>
+      
+    </li>
+  
+</ul>
+
+      
+    </li>
+  
+</ul>
+
+  </div>
+</div>
+
+
+<div class="main-content">
+<h1 class="type-name">
+
+  <span class="kind">class</span> SQLite3::Exception
+
+</h1>
+
+
+  <ul class="superclass-hierarchy"><li class="superclass"><a href="../SQLite3/Exception.html">SQLite3::Exception</a></li><li class="superclass">Exception</li><li class="superclass">Reference</li><li class="superclass">Object</li></ul>
+
+
+
+
+  <h2>
+    <a id="overview" class="anchor" href="#overview">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Overview
+  </h2>
+
+  <p>Exception thrown on invalid SQLite3 operations.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <h2>
+    <a id="defined-in" class="anchor" href="#defined-in">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Defined in:
+  </h2>
+  
+    
+      <a href="https://github.com/crystal-lang/crystal-sqlite3/blob/v0.19.0/src/sqlite3/exception.cr#L2" target="_blank">
+        sqlite3/exception.cr
+      </a>
+    
+    <br/>
+  
+
+
+
+
+
+  <h2>
+    <a id="constructors" class="anchor" href="#constructors">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Constructors
+  </h2>
+  <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#new%28db%29-class-method" class="signature"><strong>.new</strong>(db)</a>
+        
+      </li>
+    
+  </ul>
+
+
+
+
+
+  <h2>
+    <a id="instance-method-summary" class="anchor" href="#instance-method-summary">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Instance Method Summary
+  </h2>
+  <ul class="list-summary">
+    
+      <li class="entry-summary">
+        <a href="#code%3AInt32-instance-method" class="signature"><strong>#code</strong> : Int32</a>
+        
+          <div class="summary"><p>The internal code associated with the failure.</p></div>
+        
+      </li>
+    
+  </ul>
+
+
+
+
+
+<div class="methods-inherited">
+  
+    
+
+
+    
+
+
+    
+
+
+  
+    
+
+
+    
+
+
+    
+
+
+  
+    
+
+
+    
+
+
+    
+
+
+  
+</div>
+
+
+  <h2>
+    <a id="constructor-detail" class="anchor" href="#constructor-detail">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Constructor Detail
+  </h2>
+  
+    <div class="entry-detail" id="new(db)-class-method">
+      <div class="signature">
+        
+        def self.<strong>new</strong>(db)
+
+        <a class="method-permalink" href="#new%28db%29-class-method">#</a>
+      </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-lang/crystal-sqlite3/blob/v0.19.0/src/sqlite3/exception.cr#L6" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+
+
+
+
+
+  <h2>
+    <a id="instance-method-detail" class="anchor" href="#instance-method-detail">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>
+    Instance Method Detail
+  </h2>
+  
+    <div class="entry-detail" id="code:Int32-instance-method">
+      <div class="signature">
+        
+        def <strong>code</strong> : Int32
+
+        <a class="method-permalink" href="#code%3AInt32-instance-method">#</a>
+      </div>
+      
+        <div class="doc">
+          
+          <p>The internal code associated with the failure.</p>
+        </div>
+      
+      <br/>
+      <div>
+        
+          [<a href="https://github.com/crystal-lang/crystal-sqlite3/blob/v0.19.0/src/sqlite3/exception.cr#L4" target="_blank">View source</a>]
+        
+      </div>
+    </div>
+  
+
+
+
+
+</div>
+
+</body>
+</html>
