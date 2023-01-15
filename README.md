@@ -48,3 +48,39 @@ end
 
 * `Time` is implemented as `TEXT` column using `SQLite3::DATE_FORMAT_SUBSECOND` format (or `SQLite3::DATE_FORMAT_SECOND` if the text does not contain a dot).
 * `Bool` is implemented as `INT` column mapping `0`/`1` values.
+
+### Setting PRAGMAs
+
+You can adjust certain [SQLite3 PRAGMAs](https://www.sqlite.org/pragma.html)
+automatically when the connection is created by using the query parameters:
+
+```crystal
+require "sqlite3"
+
+DB.open "sqlite3://./data.db?_journal_mode=wal&_synchronous=normal" do |db|
+  # this database now uses WAL journal and normal synchronous mode
+  # (defaults were `delete` and `full`, respectively)
+end
+```
+
+The following is the list of supported options:
+
+| Name                      | Connection key  |
+|---------------------------|-----------------|
+| [Busy Timeout][pragma-to] | `_busy_timeout` |
+| [Cache Size][pragma-cs] | `_cache_size` |
+| [Foreign Keys][pragma-fk] | `_foreign_keys` |
+| [Journal Mode][pragma-jm] | `_journal_mode` |
+| [Synchronous][pragma-sync] | `_synchronous` |
+| [WAL autocheckoint][pragma-walck] | `_wal_autocheckpoint` |
+
+Please note there values passed using these connection keys are passed
+directly to SQLite3 without check or evaluation. Using incorrect values result
+in no error by the library.
+
+[pragma-to]: https://www.sqlite.org/pragma.html#pragma_busy_timeout
+[pragma-cs]: https://www.sqlite.org/pragma.html#pragma_cache_size
+[pragma-fk]: https://www.sqlite.org/pragma.html#pragma_foreign_keys
+[pragma-jm]: https://www.sqlite.org/pragma.html#pragma_journal_mode
+[pragma-sync]: https://www.sqlite.org/pragma.html#pragma_synchronous
+[pragma-walck]: https://www.sqlite.org/pragma.html#pragma_wal_autocheckpoint

@@ -10,6 +10,14 @@ private def dump(source, target)
   end
 end
 
+private def it_sets_pragma_on_connection(pragma : String, option : String, value : String, expected, file = __FILE__, line = __LINE__)
+  it "sets pragma '#{pragma}' to #{expected} using '#{option}'", file, line do
+    with_db("#{DB_FILENAME}?#{option}=#{value}") do |db|
+      db.scalar("PRAGMA #{pragma}").should eq(expected)
+    end
+  end
+end
+
 describe Connection do
   it "opens a database and then backs it up to another db" do
     with_db do |db|
@@ -68,4 +76,34 @@ describe Connection do
       cnn.scalar("select count(*) from person").should eq(1)
     end
   end
+
+  # adjust busy_timeout pragma (default is 0)
+  it_sets_pragma_on_connection "busy_timeout", "_busy_timeout", "1000", 1000
+
+  # adjust cache_size pragma (default is -2000, 2MB)
+  it_sets_pragma_on_connection "cache_size", "_cache_size", "-4000", -4000
+
+  # enable foreign_keys, no need to test off (is the default)
+  it_sets_pragma_on_connection "foreign_keys", "_foreign_keys", "1", 1
+  it_sets_pragma_on_connection "foreign_keys", "_foreign_keys", "yes", 1
+  it_sets_pragma_on_connection "foreign_keys", "_foreign_keys", "true", 1
+  it_sets_pragma_on_connection "foreign_keys", "_foreign_keys", "on", 1
+
+  # change journal_mode (default is delete)
+  it_sets_pragma_on_connection "journal_mode", "_journal_mode", "delete", "delete"
+  it_sets_pragma_on_connection "journal_mode", "_journal_mode", "truncate", "truncate"
+  it_sets_pragma_on_connection "journal_mode", "_journal_mode", "persist", "persist"
+
+  # change synchronous mode (default is 2, FULL)
+  it_sets_pragma_on_connection "synchronous", "_synchronous", "0", 0
+  it_sets_pragma_on_connection "synchronous", "_synchronous", "off", 0
+  it_sets_pragma_on_connection "synchronous", "_synchronous", "1", 1
+  it_sets_pragma_on_connection "synchronous", "_synchronous", "normal", 1
+  it_sets_pragma_on_connection "synchronous", "_synchronous", "2", 2
+  it_sets_pragma_on_connection "synchronous", "_synchronous", "full", 2
+  it_sets_pragma_on_connection "synchronous", "_synchronous", "3", 3
+  it_sets_pragma_on_connection "synchronous", "_synchronous", "extra", 3
+
+  # change wal_autocheckpoint (default is 1000)
+  it_sets_pragma_on_connection "wal_autocheckpoint", "_wal_autocheckpoint", "0", 0
 end

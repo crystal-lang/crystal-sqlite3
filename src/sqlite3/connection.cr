@@ -2,10 +2,11 @@ class SQLite3::Connection < DB::Connection
   def initialize(database)
     super
     filename = self.class.filename(database.uri)
-    # TODO maybe enable Flag::URI to parse query string in the uri as additional flags
     check LibSQLite3.open_v2(filename, out @db, (Flag::READWRITE | Flag::CREATE), nil)
     # 2 means 2 arguments; 1 is the code for UTF-8
     check LibSQLite3.create_function(@db, "regexp", 2, 1, nil, SQLite3::REGEXP_FN, nil, nil)
+
+    process_query_params(database.uri)
   rescue
     raise DB::ConnectionRefused.new
   end
@@ -87,5 +88,37 @@ class SQLite3::Connection < DB::Connection
 
   private def check(code)
     raise Exception.new(self) unless code == 0
+  end
+
+  private def process_query_params(uri : URI)
+    return unless query = uri.query
+
+    pragmas = Hash(String, String).new
+
+    URI::Params.parse(query) do |key, value|
+      case key
+      when "_busy_timeout"
+        pragmas["busy_timeout"] = value
+      when "_cache_size"
+        pragmas["cache_size"] = value
+      when "_foreign_keys"
+        pragmas["foreign_keys"] = value
+      when "_journal_mode"
+        pragmas["journal_mode"] = value
+      when "_synchronous"
+        pragmas["synchronous"] = value
+      when "_wal_autocheckpoint"
+        pragmas["wal_autocheckpoint"] = value
+      end
+    end
+
+    # concatenate all into a single SQL string
+    sql = String.build do |str|
+      pragmas.each do |key, value|
+        str << "PRAGMA #{key}=#{value};"
+      end
+    end
+
+    check LibSQLite3.exec(@db, sql, nil, nil, nil)
   end
 end
