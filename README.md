@@ -57,7 +57,7 @@ automatically when the connection is created by using the query parameters:
 ```crystal
 require "sqlite3"
 
-DB.open "sqlite3://./data.db?_journal_mode=wal&_synchronous=normal" do |db|
+DB.open "sqlite3://./data.db?journal_mode=wal&synchronous=normal" do |db|
   # this database now uses WAL journal and normal synchronous mode
   # (defaults were `delete` and `full`, respectively)
 end
