@@ -67,12 +67,12 @@ The following is the list of supported options:
 
 | Name                      | Connection key  |
 |---------------------------|-----------------|
-| [Busy Timeout][pragma-to] | `_busy_timeout` |
-| [Cache Size][pragma-cs] | `_cache_size` |
-| [Foreign Keys][pragma-fk] | `_foreign_keys` |
-| [Journal Mode][pragma-jm] | `_journal_mode` |
-| [Synchronous][pragma-sync] | `_synchronous` |
-| [WAL autocheckoint][pragma-walck] | `_wal_autocheckpoint` |
+| [Busy Timeout][pragma-to] | `busy_timeout` |
+| [Cache Size][pragma-cs] | `cache_size` |
+| [Foreign Keys][pragma-fk] | `foreign_keys` |
+| [Journal Mode][pragma-jm] | `journal_mode` |
+| [Synchronous][pragma-sync] | `synchronous` |
+| [WAL autocheckoint][pragma-walck] | `wal_autocheckpoint` |
 
 Please note there values passed using these connection keys are passed
 directly to SQLite3 without check or evaluation. Using incorrect values result

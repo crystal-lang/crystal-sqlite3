@@ -93,32 +93,40 @@ class SQLite3::Connection < DB::Connection
   private def process_query_params(uri : URI)
     return unless query = uri.query
 
-    pragmas = Hash(String, String).new
-
-    URI::Params.parse(query) do |key, value|
-      case key
-      when "_busy_timeout"
-        pragmas["busy_timeout"] = value
-      when "_cache_size"
-        pragmas["cache_size"] = value
-      when "_foreign_keys"
-        pragmas["foreign_keys"] = value
-      when "_journal_mode"
-        pragmas["journal_mode"] = value
-      when "_synchronous"
-        pragmas["synchronous"] = value
-      when "_wal_autocheckpoint"
-        pragmas["wal_autocheckpoint"] = value
-      end
-    end
+    detected_pragmas = extract_params(query,
+      busy_timeout: nil,
+      cache_size: nil,
+      foreign_keys: nil,
+      journal_mode: nil,
+      synchronous: nil,
+      wal_autocheckpoint: nil,
+    )
 
     # concatenate all into a single SQL string
     sql = String.build do |str|
-      pragmas.each do |key, value|
+      detected_pragmas.each do |key, value|
+        next unless value
         str << "PRAGMA #{key}=#{value};"
       end
     end
 
     check LibSQLite3.exec(@db, sql, nil, nil, nil)
+  end
+
+  private def extract_params(query : String, **default : **T) forall T
+    res = default
+
+    URI::Params.parse(query) do |key, value|
+      {% begin %}
+        case key
+        {% for key in T %}
+        when {{ key.stringify }}
+          res = res.merge({{key.id}}: value)
+        {% end %}
+        end
+      {% end %}
+    end
+
+    res
   end
 end
