@@ -1,6 +1,9 @@
 class SQLite3::Driver < DB::Driver
-  def build_connection(context : DB::ConnectionContext) : SQLite3::Connection
-    SQLite3::Connection.new(context)
+  def connection_builder(uri : URI) : Proc(::DB::Connection)
+    params = HTTP::Params.parse(uri.query || "")
+    options = connection_options(params)
+    sqlite3_options = SQLite3::Connection::Options.from_uri(uri)
+    ->{ SQLite3::Connection.new(options, sqlite3_options).as(::DB::Connection) }
   end
 end
 
