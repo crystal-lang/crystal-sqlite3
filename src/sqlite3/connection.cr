@@ -1,12 +1,56 @@
 class SQLite3::Connection < DB::Connection
-  def initialize(database)
-    super
-    filename = self.class.filename(database.uri)
-    check LibSQLite3.open_v2(filename, out @db, (Flag::READWRITE | Flag::CREATE), nil)
+  record Options,
+    filename : String = ":memory:",
+    # pragmas
+    busy_timeout : String? = nil,
+    cache_size : String? = nil,
+    foreign_keys : String? = nil,
+    journal_mode : String? = nil,
+    synchronous : String? = nil,
+    wal_autocheckpoint : String? = nil do
+    def self.from_uri(uri : URI, default = Options.new)
+      params = HTTP::Params.parse(uri.query || "")
+
+      Options.new(
+        filename: URI.decode_www_form((uri.host || "") + uri.path),
+        # pragmas
+        busy_timeout: params.fetch("busy_timeout", default.busy_timeout),
+        cache_size: params.fetch("cache_size", default.cache_size),
+        foreign_keys: params.fetch("foreign_keys", default.foreign_keys),
+        journal_mode: params.fetch("journal_mode", default.journal_mode),
+        synchronous: params.fetch("synchronous", default.synchronous),
+        wal_autocheckpoint: params.fetch("wal_autocheckpoint", default.wal_autocheckpoint),
+      )
+    end
+
+    def pragma_statement
+      res = String.build do |str|
+        pragma_append(str, "busy_timeout", busy_timeout)
+        pragma_append(str, "cache_size", cache_size)
+        pragma_append(str, "foreign_keys", foreign_keys)
+        pragma_append(str, "journal_mode", journal_mode)
+        pragma_append(str, "synchronous", synchronous)
+        pragma_append(str, "wal_autocheckpoint", wal_autocheckpoint)
+      end
+
+      res.empty? ? nil : res
+    end
+
+    private def pragma_append(io, key, value)
+      return unless value
+      io << "PRAGMA #{key}=#{value};"
+    end
+  end
+
+  def initialize(options : ::DB::Connection::Options, sqlite3_options : Options)
+    super(options)
+    check LibSQLite3.open_v2(sqlite3_options.filename, out @db, (Flag::READWRITE | Flag::CREATE), nil)
     # 2 means 2 arguments; 1 is the code for UTF-8
     check LibSQLite3.create_function(@db, "regexp", 2, 1, nil, SQLite3::REGEXP_FN, nil, nil)
 
-    process_query_params(database.uri)
+    if pragma_statement = sqlite3_options.pragma_statement
+      check LibSQLite3.exec(@db, pragma_statement, nil, nil, nil)
+    end
   rescue
     raise DB::ConnectionRefused.new
   end
@@ -88,45 +132,5 @@ class SQLite3::Connection < DB::Connection
 
   private def check(code)
     raise Exception.new(self) unless code == 0
-  end
-
-  private def process_query_params(uri : URI)
-    return unless query = uri.query
-
-    detected_pragmas = extract_params(query,
-      busy_timeout: nil,
-      cache_size: nil,
-      foreign_keys: nil,
-      journal_mode: nil,
-      synchronous: nil,
-      wal_autocheckpoint: nil,
-    )
-
-    # concatenate all into a single SQL string
-    sql = String.build do |str|
-      detected_pragmas.each do |key, value|
-        next unless value
-        str << "PRAGMA #{key}=#{value};"
-      end
-    end
-
-    check LibSQLite3.exec(@db, sql, nil, nil, nil)
-  end
-
-  private def extract_params(query : String, **default : **T) forall T
-    res = default
-
-    URI::Params.parse(query) do |key, value|
-      {% begin %}
-        case key
-        {% for key in T %}
-        when {{ key.stringify }}
-          res = res.merge({{key.id}}: value)
-        {% end %}
-        end
-      {% end %}
-    end
-
-    res
   end
 end

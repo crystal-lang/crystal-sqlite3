@@ -27,7 +27,7 @@ describe Driver do
 
   it "should use database option as file to open" do
     with_db do |db|
-      db.driver.should be_a(SQLite3::Driver)
+      db.checkout.should be_a(SQLite3::Connection)
       File.exists?(DB_FILENAME).should be_true
     end
   end
