@@ -8,7 +8,6 @@ class SQLite3::Connection < DB::Connection
     journal_mode : String? = nil,
     synchronous : String? = nil,
     wal_autocheckpoint : String? = nil do
-
     def self.from_uri(uri : URI, default = Options.new)
       params = HTTP::Params.parse(uri.query || "")
 
