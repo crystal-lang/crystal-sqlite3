@@ -1,3 +1,9 @@
+## v0.20.0 (2023-06-23)
+
+* Update to crystal-db ~> 0.12.0. ([#91](https://github.com/crystal-lang/crystal-sqlite3/pull/91))
+* Fix result set & connection release lifecycle. ([#90](https://github.com/crystal-lang/crystal-sqlite3/pull/90))
+* Automatically set PRAGMAs using connection query params. ([#85](https://github.com/crystal-lang/crystal-sqlite3/pull/85), thanks @luislavena)
+
 ## v0.19.0 (2022-01-28)
 
 * Update to crystal-db ~> 0.11.0. ([#77](https://github.com/crystal-lang/crystal-sqlite3/pull/77))
