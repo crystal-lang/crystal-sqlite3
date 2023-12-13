@@ -44,6 +44,14 @@ DB.open "sqlite3://./data.db" do |db|
 end
 ```
 
+Example 2
+```
+db = DB.open "sqlite3://./data.db" 
+db.exec "CREATE TABLE IF NOT EXISTS contacts (name text, age integer)"
+db.exec "INSERT INTO contacts VALUES (?, ?)", "John Doe", 30
+contacts = db.query_all "SELECT name, age FROM contacts", as: {name: String, age: Int64}
+```
+
 ### DB::Any
 
 * `Time` is implemented as `TEXT` column using `SQLite3::DATE_FORMAT_SUBSECOND` format (or `SQLite3::DATE_FORMAT_SECOND` if the text does not contain a dot).
