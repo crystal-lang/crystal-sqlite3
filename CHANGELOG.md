@@ -1,3 +1,7 @@
+## v0.21.0 (2023-12-12)
+
+* Update to crystal-db ~> 0.13.0. ([#94](https://github.com/crystal-lang/crystal-sqlite3/pull/94))
+
 ## v0.20.0 (2023-06-23)
 
 * Update to crystal-db ~> 0.12.0. ([#91](https://github.com/crystal-lang/crystal-sqlite3/pull/91))
