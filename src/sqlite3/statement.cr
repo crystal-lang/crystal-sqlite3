@@ -45,14 +45,6 @@ class SQLite3::Statement < DB::Statement
     check LibSQLite3.bind_int(self, index, value ? 1 : 0)
   end
 
-  private def bind_arg(index, value : UInt8)
-    check LibSQLite3.bind_int(self, index, value.to_i)
-  end
-
-  private def bind_arg(index, value : UInt16)
-    check LibSQLite3.bind_int(self, index, value.to_i)
-  end
-
   private def bind_arg(index, value : Int8)
     check LibSQLite3.bind_int(self, index, value.to_i)
   end
