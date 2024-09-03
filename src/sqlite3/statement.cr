@@ -54,7 +54,7 @@ class SQLite3::Statement < DB::Statement
   end
 
   private def bind_arg(index, value : UInt32)
-    check LibSQLite3.bind_int(self, index, value)
+    check LibSQLite3.bind_int64(self, index, value.to_i64)
   end
 
   private def bind_arg(index, value : Int8)
