@@ -51,6 +51,30 @@ class SQLite3::ResultSet < DB::ResultSet
     @column_index
   end
 
+  def read(t : UInt8.class) : UInt8
+    read(Int64).to_u8
+  end
+
+  def read(type : UInt8?.class) : UInt8?
+    read(Int64?).try &.to_u8
+  end
+
+  def read(t : UInt16.class) : UInt16
+    read(Int64).to_u16
+  end
+
+  def read(type : UInt16?.class) : UInt16?
+    read(Int64?).try &.to_u16
+  end
+
+  def read(t : UInt32.class) : UInt32
+    read(Int64).to_u32
+  end
+
+  def read(type : UInt32?.class) : UInt32?
+    read(Int64?).try &.to_u32
+  end
+
   def read(t : Int8.class) : Int8
     read(Int64).to_i8
   end
