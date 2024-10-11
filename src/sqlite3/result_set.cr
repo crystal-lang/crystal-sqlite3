@@ -155,7 +155,7 @@ class SQLite3::ResultSet < DB::ResultSet
     @statement.as(Statement)
   end
 
-  private def moving_column
+  private def moving_column(&)
     res = yield @column_index
     @column_index += 1
     res
