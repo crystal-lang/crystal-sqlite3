@@ -86,6 +86,7 @@ lib LibSQLite3
   fun backup_finish = sqlite3_backup_finish(SQLite3Backup) : Code
 
   fun prepare_v2 = sqlite3_prepare_v2(db : SQLite3, zSql : UInt8*, nByte : Int32, ppStmt : Statement*, pzTail : UInt8**) : Int32
+  fun exec = sqlite3_exec(db : SQLite3, zSql : UInt8*, pCallback : Callback, pCallbackArgs : Void*, pzErrMsg : UInt8**) : Int32
   fun step = sqlite3_step(stmt : Statement) : Int32
   fun column_count = sqlite3_column_count(stmt : Statement) : Int32
   fun column_type = sqlite3_column_type(stmt : Statement, iCol : Int32) : ::SQLite3::Type

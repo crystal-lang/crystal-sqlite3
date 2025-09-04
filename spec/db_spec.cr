@@ -13,7 +13,7 @@ private def cast_if_blob(expr, sql_type)
   end
 end
 
-DB::DriverSpecs(DB::Any).run do
+DB::DriverSpecs(SQLite3::Any).run do |ctx|
   support_unprepared false
 
   before do
@@ -38,6 +38,20 @@ DB::DriverSpecs(DB::Any).run do
   sample_value Time.utc(2016, 2, 15, 10, 15, 30), "text", "'2016-02-15 10:15:30.000'", type_safe_value: false
   sample_value Time.utc(2016, 2, 15, 10, 15, 30, nanosecond: 123000000), "text", "'2016-02-15 10:15:30.123'", type_safe_value: false
   sample_value Time.local(2016, 2, 15, 7, 15, 30, location: Time::Location.fixed("fixed", -3*3600)), "text", "'2016-02-15 10:15:30.000'", type_safe_value: false
+  sample_value Int8::MIN, "int", Int8::MIN.to_s, type_safe_value: false
+  sample_value Int8::MAX, "int", Int8::MAX.to_s, type_safe_value: false
+  sample_value UInt8::MIN, "int", UInt8::MIN.to_s, type_safe_value: false
+  sample_value UInt8::MAX, "int", UInt8::MAX.to_s, type_safe_value: false
+  sample_value Int16::MIN, "int", Int16::MIN.to_s, type_safe_value: false
+  sample_value Int16::MAX, "int", Int16::MAX.to_s, type_safe_value: false
+  sample_value UInt16::MIN, "int", UInt16::MIN.to_s, type_safe_value: false
+  sample_value UInt16::MAX, "int", UInt16::MAX.to_s, type_safe_value: false
+  sample_value Int32::MIN, "int", Int32::MIN.to_s, type_safe_value: false
+  sample_value Int32::MAX, "int", Int32::MAX.to_s, type_safe_value: false
+  sample_value UInt32::MIN, "int", UInt32::MIN.to_s, type_safe_value: false
+  sample_value UInt32::MAX, "int", UInt32::MAX.to_s, type_safe_value: false
+  sample_value Int64::MIN, "int", Int64::MIN.to_s, type_safe_value: false
+  sample_value Int64::MAX, "int", Int64::MAX.to_s, type_safe_value: false
 
   ary = UInt8[0x53, 0x51, 0x4C, 0x69, 0x74, 0x65]
   sample_value Bytes.new(ary.to_unsafe, ary.size), "blob", "X'53514C697465'" # , type_safe_value: false
@@ -104,7 +118,7 @@ DB::DriverSpecs(DB::Any).run do
     db.exec %(insert into a (i, str) values (23, "bai bai");)
 
     2.times do |i|
-      DB.open db.uri do |db|
+      DB.open ctx.connection_string do |db|
         begin
           db.query("SELECT i, str FROM a WHERE i = ?", 23) do |rs|
             rs.move_next

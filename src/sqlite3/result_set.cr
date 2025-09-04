@@ -2,8 +2,8 @@ class SQLite3::ResultSet < DB::ResultSet
   @column_index = 0
 
   protected def do_close
-    super
     LibSQLite3.reset(self)
+    super
   end
 
   # Advances to the next row. Returns `true` if there's a next row,
@@ -49,6 +49,46 @@ class SQLite3::ResultSet < DB::ResultSet
 
   def next_column_index : Int32
     @column_index
+  end
+
+  def read(t : UInt8.class) : UInt8
+    read(Int64).to_u8
+  end
+
+  def read(type : UInt8?.class) : UInt8?
+    read(Int64?).try &.to_u8
+  end
+
+  def read(t : UInt16.class) : UInt16
+    read(Int64).to_u16
+  end
+
+  def read(type : UInt16?.class) : UInt16?
+    read(Int64?).try &.to_u16
+  end
+
+  def read(t : UInt32.class) : UInt32
+    read(Int64).to_u32
+  end
+
+  def read(type : UInt32?.class) : UInt32?
+    read(Int64?).try &.to_u32
+  end
+
+  def read(t : Int8.class) : Int8
+    read(Int64).to_i8
+  end
+
+  def read(type : Int8?.class) : Int8?
+    read(Int64?).try &.to_i8
+  end
+
+  def read(t : Int16.class) : Int16
+    read(Int64).to_i16
+  end
+
+  def read(type : Int16?.class) : Int16?
+    read(Int64?).try &.to_i16
   end
 
   def read(t : Int32.class) : Int32
@@ -115,7 +155,7 @@ class SQLite3::ResultSet < DB::ResultSet
     @statement.as(Statement)
   end
 
-  private def moving_column
+  private def moving_column(&)
     res = yield @column_index
     @column_index += 1
     res
