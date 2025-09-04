@@ -84,3 +84,7 @@ in no error by the library.
 [pragma-jm]: https://www.sqlite.org/pragma.html#pragma_journal_mode
 [pragma-sync]: https://www.sqlite.org/pragma.html#pragma_synchronous
 [pragma-walck]: https://www.sqlite.org/pragma.html#pragma_wal_autocheckpoint
+
+## Guides
+
+- [Compile and link SQLite](compile_and_link_sqlite.md)
