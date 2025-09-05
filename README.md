@@ -1,4 +1,6 @@
-# crystal-sqlite3 [![Build Status](https://travis-ci.org/crystal-lang/crystal-sqlite3.svg?branch=master)](https://travis-ci.org/crystal-lang/crystal-sqlite3)
+[![CI](https://github.com/crystal-lang/crystal-sqlite3/actions/workflows/ci.yml/badge.svg)](https://github.com/crystal-lang/crystal-sqlite3/actions/workflows/ci.yml)
+
+# crystal-sqlite3
 
 SQLite3 bindings for [Crystal](http://crystal-lang.org/).
 
