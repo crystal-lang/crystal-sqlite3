@@ -1,4 +1,4 @@
-## v0.22.0 (2025-09-??)
+## v0.22.0 (2025-09-05)
 
 * Add arg support for `Int16`, `Int8`, `UInt16`, `UInt8`. ([#98](https://github.com/crystal-lang/crystal-sqlite3/pull/98), [#99](https://github.com/crystal-lang/crystal-sqlite3/pull/99), thanks @baseballlover723, @bcardiff)
 * Add docs on how to compile and link SQLite ([#74](https://github.com/crystal-lang/crystal-sqlite3/pull/74), thanks @chillfox)
