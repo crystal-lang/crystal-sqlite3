@@ -12,7 +12,7 @@ class SQLite3::Connection < DB::Connection
       params = HTTP::Params.parse(uri.query || "")
 
       Options.new(
-        filename: URI.decode_www_form((uri.host || "") + uri.path),
+        filename: URI.decode_www_form((uri.hostname || "") + uri.path),
         # pragmas
         busy_timeout: params.fetch("busy_timeout", default.busy_timeout),
         cache_size: params.fetch("cache_size", default.cache_size),
@@ -56,7 +56,7 @@ class SQLite3::Connection < DB::Connection
   end
 
   def self.filename(uri : URI)
-    URI.decode_www_form((uri.host || "") + uri.path)
+    URI.decode_www_form((uri.hostname || "") + uri.path)
   end
 
   def build_prepared_statement(query) : Statement
