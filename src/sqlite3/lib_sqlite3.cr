@@ -1,6 +1,9 @@
 require "./type"
 
 @[Link("sqlite3")]
+{% if flag?(:msvc) %}
+  @[Link(dll: "sqlite3.dll")]
+{% end %}
 lib LibSQLite3
   type SQLite3 = Void*
   type Statement = Void*
