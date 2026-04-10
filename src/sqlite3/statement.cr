@@ -82,11 +82,11 @@ class SQLite3::Statement < DB::Statement
   end
 
   private def bind_arg(index, value : String)
-    check LibSQLite3.bind_text(self, index, value, value.bytesize, nil)
+    check LibSQLite3.bind_text(self, index, value, value.bytesize, -1) # -1 is SQLITE_TRANSIENT
   end
 
   private def bind_arg(index, value : Bytes)
-    check LibSQLite3.bind_blob(self, index, value, value.size, nil)
+    check LibSQLite3.bind_blob(self, index, value, value.size, -1) # -1 is SQLITE_TRANSIENT
   end
 
   private def bind_arg(index, value : Time)
