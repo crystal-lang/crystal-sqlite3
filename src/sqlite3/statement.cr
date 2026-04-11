@@ -1,10 +1,18 @@
 class SQLite3::Statement < DB::Statement
+  # Keep references to bound strings and bytes to prevent them from being
+  # garbage collected before SQLite executes the statement. It is lazy
+  # initialized to help with memory footprint.
+  # See https://github.com/crystal-lang/crystal-sqlite3/pull/111 for more
+  # context.
+  @_gc_safe_args : Array(Pointer(Void)) | Nil
+
   def initialize(connection, command)
     super(connection, command)
     check LibSQLite3.prepare_v2(sqlite3_connection, command, command.bytesize + 1, out @stmt, nil)
   end
 
   protected def perform_query(args : Enumerable) : DB::ResultSet
+    @_gc_safe_args.try(&.clear)
     LibSQLite3.reset(self)
     args.each_with_index(1) do |arg, index|
       bind_arg(index, arg)
@@ -13,6 +21,7 @@ class SQLite3::Statement < DB::Statement
   end
 
   protected def perform_exec(args : Enumerable) : DB::ExecResult
+    @_gc_safe_args.try(&.clear)
     LibSQLite3.reset(self.to_unsafe)
     args.each_with_index(1) do |arg, index|
       bind_arg(index, arg)
@@ -82,11 +91,15 @@ class SQLite3::Statement < DB::Statement
   end
 
   private def bind_arg(index, value : String)
-    check LibSQLite3.bind_text(self, index, value, value.bytesize, -1) # -1 is SQLITE_TRANSIENT
+    @_gc_safe_args ||= [] of Pointer(Void)
+    @_gc_safe_args.try(&.push(pointerof(value).as(Pointer(Void))))
+    check LibSQLite3.bind_text(self, index, value, value.bytesize, nil)
   end
 
   private def bind_arg(index, value : Bytes)
-    check LibSQLite3.bind_blob(self, index, value, value.size, -1) # -1 is SQLITE_TRANSIENT
+    @_gc_safe_args ||= [] of Pointer(Void)
+    @_gc_safe_args.try(&.push(pointerof(value).as(Pointer(Void))))
+    check LibSQLite3.bind_blob(self, index, value, value.size, nil)
   end
 
   private def bind_arg(index, value : Time)
