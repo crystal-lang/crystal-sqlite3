@@ -43,6 +43,9 @@ DB.open "sqlite3://./data.db" do |db|
       # => John Doe (30)
     end
   end
+
+  contacts = db.query_all "SELECT name, age FROM contacts", as: {name: String, age: Int64}
+  puts contacts # => [{name: "John Doe", age: 30}, {name: "Sarah", age: 33}]
 end
 ```
 
