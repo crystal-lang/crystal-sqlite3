@@ -4,7 +4,16 @@ class SQLite3::Statement < DB::Statement
   # initialized to help with memory footprint.
   # See https://github.com/crystal-lang/crystal-sqlite3/pull/111 for more
   # context.
-  @_gc_safe_args : Array(Pointer(Void)) | Nil
+  @arg_refs : Array(Pointer(UInt8)) | Nil
+
+  private def clear_arg_refs
+    @arg_refs.try(&.clear)
+  end
+
+  private def track_arg_ref(ref)
+    arg_refs = @arg_refs ||= [] of Pointer(UInt8)
+    arg_refs.push(ref.to_unsafe)
+  end
 
   def initialize(connection, command)
     super(connection, command)
@@ -12,7 +21,7 @@ class SQLite3::Statement < DB::Statement
   end
 
   protected def perform_query(args : Enumerable) : DB::ResultSet
-    @_gc_safe_args.try(&.clear)
+    clear_arg_refs
     LibSQLite3.reset(self)
     args.each_with_index(1) do |arg, index|
       bind_arg(index, arg)
@@ -21,7 +30,7 @@ class SQLite3::Statement < DB::Statement
   end
 
   protected def perform_exec(args : Enumerable) : DB::ExecResult
-    @_gc_safe_args.try(&.clear)
+    clear_arg_refs
     LibSQLite3.reset(self.to_unsafe)
     args.each_with_index(1) do |arg, index|
       bind_arg(index, arg)
@@ -43,6 +52,7 @@ class SQLite3::Statement < DB::Statement
 
   protected def do_close
     super
+    clear_arg_refs
     check LibSQLite3.finalize(self)
   end
 
@@ -91,14 +101,12 @@ class SQLite3::Statement < DB::Statement
   end
 
   private def bind_arg(index, value : String)
-    @_gc_safe_args ||= [] of Pointer(Void)
-    @_gc_safe_args.try(&.push(pointerof(value).as(Pointer(Void))))
+    track_arg_ref(value)
     check LibSQLite3.bind_text(self, index, value, value.bytesize, nil)
   end
 
   private def bind_arg(index, value : Bytes)
-    @_gc_safe_args ||= [] of Pointer(Void)
-    @_gc_safe_args.try(&.push(pointerof(value).as(Pointer(Void))))
+    track_arg_ref(value)
     check LibSQLite3.bind_blob(self, index, value, value.size, nil)
   end
 
