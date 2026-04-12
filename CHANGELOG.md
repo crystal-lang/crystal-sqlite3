@@ -1,3 +1,11 @@
+## v0.23.0 (2026-04-12)
+
+* Use `URI#hostname` to avoid interpreting `:memory:` as `[:memory:]` ([#105](https://github.com/crystal-lang/crystal-sqlite3/pull/105), thanks @bcardiff)
+* Prevent arguments from being GC'd before statement is executed ([#111](https://github.com/crystal-lang/crystal-sqlite3/pull/111), thanks @lwakefield)
+* Add DLL name to `@[Link]` annotation ([#107](https://github.com/crystal-lang/crystal-sqlite3/pull/107), thanks @HertzDevil)
+* Replace Travis CI badge with GitHub Action ([#104](https://github.com/crystal-lang/crystal-sqlite3/pull/104), thanks @bcardiff)
+* Add another readme example ([#112](https://github.com/crystal-lang/crystal-sqlite3/pull/112), thanks @bcardiff)
+
 ## v0.22.0 (2025-09-05)
 
 * Add arg support for `Int16`, `Int8`, `UInt16`, `UInt8`. ([#98](https://github.com/crystal-lang/crystal-sqlite3/pull/98), [#99](https://github.com/crystal-lang/crystal-sqlite3/pull/99), thanks @baseballlover723, @bcardiff)
