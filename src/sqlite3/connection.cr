@@ -130,7 +130,24 @@ class SQLite3::Connection < DB::Connection
     @db
   end
 
+  # Enable or disable extension loading
+  # This must be called before loading extensions
+  def enable_load_extension(enable : Bool)
+    check LibSQLite3.enable_load_extension(@db, enable ? 1 : 0)
+  end
+
+  # Load a SQLite extension from the given file path
+  # The extension loading must be enabled first with enable_load_extension(true)
+  def load_extension(path : String, entry_point : String? = nil)
+    err_msg = Pointer(UInt8).null
+    result = LibSQLite3.load_extension(@db, path, entry_point, pointerof(err_msg))
+    if result != 0
+      msg = err_msg.null? ? "Unknown error" : String.new(err_msg)
+      raise Exception.new("Failed to load extension: #{msg}")
+    end
+  end
+
   private def check(code)
-    raise Exception.new(self) unless code == 0
+    raise Exception.new(@db) unless code == 0
   end
 end

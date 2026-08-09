@@ -4,6 +4,9 @@ require "./type"
 {% if flag?(:msvc) %}
   @[Link(dll: "sqlite3.dll")]
 {% end %}
+{% if flag?(:darwin) %}
+  @[Link(ldflags: "-L/opt/homebrew/opt/sqlite/lib")]
+{% end %}
 lib LibSQLite3
   type SQLite3 = Void*
   type Statement = Void*
@@ -119,4 +122,8 @@ lib LibSQLite3
   fun create_function = sqlite3_create_function(SQLite3, funcName : UInt8*, nArg : Int32, eTextRep : Int32, pApp : Void*, xFunc : FuncCallback, xStep : Void*, xFinal : Void*) : Int32
   fun value_text = sqlite3_value_text(SQLite3Value) : UInt8*
   fun result_int = sqlite3_result_int(SQLite3Context, Int32) : Nil
+
+  # Extension loading functions
+  fun enable_load_extension = sqlite3_enable_load_extension(db : SQLite3, onoff : Int32) : Int32
+  fun load_extension = sqlite3_load_extension(db : SQLite3, zFile : UInt8*, zProc : UInt8*, pzErrMsg : UInt8**) : Int32
 end

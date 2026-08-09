@@ -7,4 +7,9 @@ class SQLite3::Exception < ::Exception
     super(String.new(LibSQLite3.errmsg(db)))
     @code = LibSQLite3.errcode(db)
   end
+
+  def initialize(message : String)
+    super(message)
+    @code = 0
+  end
 end
