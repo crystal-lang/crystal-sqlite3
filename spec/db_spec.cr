@@ -149,4 +149,11 @@ DB::DriverSpecs(SQLite3::Any).run do |ctx|
     (db.scalar "select 'unmatching text' REGEXP '^m'").should eq 0
     (db.scalar "select 'matching text' REGEXP '^m'").should eq 1
   end
+
+  it "does not re-raise the last error on db.close" do |db|
+    db.exec "create table t (id integer primary key)"
+    expect_raises SQLite3::Exception, "UNIQUE constraint failed: t.id" do
+      db.exec %(insert into t values (1), (1))
+    end
+  end
 end

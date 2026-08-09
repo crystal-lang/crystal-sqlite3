@@ -53,7 +53,7 @@ class SQLite3::Statement < DB::Statement
   protected def do_close
     super
     clear_arg_refs
-    check LibSQLite3.finalize(self)
+    LibSQLite3.finalize(self)
   end
 
   private def bind_arg(index, value : Nil)
