@@ -6,7 +6,7 @@ lib LibSQLite3
 end
 
 private def active_statements(cnn : DB::Connection)
-  handle = cnn.as(SQLite3::Connection).to_unsafe
+  handle = cnn.as(SQLite3::Connection)
   count = 0
   stmt = LibSQLite3.next_stmt(handle, Pointer(Void).null.as(LibSQLite3::Statement))
   while !stmt.null?
