@@ -42,7 +42,14 @@ class SQLite3::Statement < DB::Statement
       step = LibSQLite3::Code.new LibSQLite3.step(self)
       break unless step == LibSQLite3::Code::ROW
     end
-    raise Exception.new(sqlite3_connection) unless step == LibSQLite3::Code::DONE
+    unless step == LibSQLite3::Code::DONE
+      # reset, or the statement stays active and blocks COMMIT and the
+      # connection's next read transaction. Build the exception first:
+      # it reads errmsg/errcode off the connection.
+      exception = Exception.new(sqlite3_connection)
+      LibSQLite3.reset(self)
+      raise exception
+    end
 
     rows_affected = LibSQLite3.changes(sqlite3_connection).to_i64
     last_id = LibSQLite3.last_insert_rowid(sqlite3_connection)
