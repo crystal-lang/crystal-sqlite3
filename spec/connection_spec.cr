@@ -77,6 +77,24 @@ describe Connection do
     end
   end
 
+  it "reports the driver name" do
+    with_cnn do |cnn|
+      cnn.driver_name.should eq("sqlite3")
+    end
+  end
+
+  it "reports the server name" do
+    with_cnn do |cnn|
+      cnn.server_name.should eq("SQLite")
+    end
+  end
+
+  it "reports the linked library version as the server version" do
+    with_cnn do |cnn|
+      cnn.server_version.should eq(cnn.scalar("select sqlite_version()"))
+    end
+  end
+
   # adjust busy_timeout pragma (default is 0)
   it_sets_pragma_on_connection "busy_timeout", "1000", 1000
 

@@ -73,6 +73,23 @@ class SQLite3::Connection < DB::Connection
     raise DB::Error.new("SQLite3 driver does not support unprepared statements")
   end
 
+  # :inherit:
+  def driver_name : String
+    "sqlite3"
+  end
+
+  # :inherit:
+  def server_name : String?
+    "SQLite"
+  end
+
+  # :inherit:
+  #
+  # SQLite is embedded, so this is the version of the linked SQLite library.
+  def server_version : String?
+    String.new(LibSQLite3.libversion)
+  end
+
   def do_close
     super
     check LibSQLite3.close(self)
