@@ -1,3 +1,8 @@
+## v0.24.0 (2026-10-08)
+
+* Do not check error code of `LibSQLite3.finalize` ([#114](https://github.com/crystal-lang/crystal-sqlite3/pull/114), thanks @phil294)
+* Update shard to `crystal-db` version `0.15.0` ([#117](https://github.com/crystal-lang/crystal-sqlite3/pull/117), thanks @blacksmoke16)
+
 ## v0.23.0 (2026-04-12)
 
 * Use `URI#hostname` to avoid interpreting `:memory:` as `[:memory:]` ([#105](https://github.com/crystal-lang/crystal-sqlite3/pull/105), thanks @bcardiff)
