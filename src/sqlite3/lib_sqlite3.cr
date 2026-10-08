@@ -81,6 +81,8 @@ lib LibSQLite3
 
   fun open_v2 = sqlite3_open_v2(filename : UInt8*, db : SQLite3*, flags : ::SQLite3::Flag, zVfs : UInt8*) : Int32
 
+  fun libversion = sqlite3_libversion : UInt8*
+
   fun errcode = sqlite3_errcode(SQLite3) : Int32
   fun errmsg = sqlite3_errmsg(SQLite3) : UInt8*
 
