@@ -49,6 +49,41 @@ DB.open "sqlite3://./data.db" do |db|
 end
 ```
 
+### Loading extensions
+
+`SQLite3::Connection#load_extension(path : String, entry_point : String? = nil)`
+loads a native SQLite extension into that connection. It temporarily enables
+the native loading API and disables it afterward, including when loading fails.
+It does not enable the SQL `load_extension()` function. Only load trusted
+extensions: their native code runs inside your application.
+
+Use `db.setup_connection` to load an extension on existing and future pooled
+connections. Register the callback before sharing the database with other fibers:
+
+```crystal
+require "sqlite3"
+
+DB.open "sqlite3://./data.db" do |db|
+  db.setup_connection do |connection|
+    connection.as(SQLite3::Connection).load_extension("/path/to/extension")
+  end
+
+  # Queries can now use the extension on any pooled connection.
+end
+```
+
+SQLite chooses the entry point when it is omitted. To specify one, use
+`connection.load_extension(path, entry_point: "sqlite3_example_init")` on a
+`SQLite3::Connection`. Loading failures raise `SQLite3::Exception` with the
+loader's error message and result code.
+
+Calling this method requires linking an SQLite library with extension loading
+support. Builds with `SQLITE_OMIT_LOAD_EXTENSION` can omit the native loading
+symbols entirely, causing a linker error even if loading is guarded by a runtime
+check. Applications that do not call `load_extension` can still use these SQLite
+builds. See [Compile and link SQLite](compile_and_link_sqlite.md) for using a
+different SQLite library.
+
 ### DB::Any
 
 * `Time` is implemented as `TEXT` column using `SQLite3::DATE_FORMAT_SUBSECOND` format (or `SQLite3::DATE_FORMAT_SECOND` if the text does not contain a dot).
@@ -89,6 +124,18 @@ in no error by the library.
 [pragma-jm]: https://www.sqlite.org/pragma.html#pragma_journal_mode
 [pragma-sync]: https://www.sqlite.org/pragma.html#pragma_synchronous
 [pragma-walck]: https://www.sqlite.org/pragma.html#pragma_wal_autocheckpoint
+
+## Development
+
+The specs compile a small native extension fixture. Running the full suite
+requires a C compiler, SQLite development headers (including `sqlite3ext.h`),
+and linking an SQLite library with extension loading support. On Ubuntu, install
+the prerequisites with `sudo apt-get install build-essential libsqlite3-dev`.
+
+```sh
+shards install
+crystal spec
+```
 
 ## Guides
 

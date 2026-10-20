@@ -5,6 +5,8 @@ require "./type"
   @[Link(dll: "sqlite3.dll")]
 {% end %}
 lib LibSQLite3
+  DBCONFIG_ENABLE_LOAD_EXTENSION = 1005
+
   type SQLite3 = Void*
   type Statement = Void*
   type SQLite3Backup = Void*
@@ -85,6 +87,10 @@ lib LibSQLite3
 
   fun errcode = sqlite3_errcode(SQLite3) : Int32
   fun errmsg = sqlite3_errmsg(SQLite3) : UInt8*
+
+  fun db_config = sqlite3_db_config(db : SQLite3, option : Int32, ...) : Int32
+  fun load_extension = sqlite3_load_extension(db : SQLite3, path : UInt8*, entry_point : UInt8*, error : UInt8**) : Int32
+  fun free = sqlite3_free(memory : Void*) : Void
 
   fun backup_init = sqlite3_backup_init(SQLite3, UInt8*, SQLite3, UInt8*) : SQLite3Backup
   fun backup_step = sqlite3_backup_step(SQLite3Backup, Int32) : Code
